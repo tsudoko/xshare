@@ -87,6 +87,8 @@ class Uploader : Activity() {
                 .responseString { req, res, result ->
                     val (d, err) = result
                     nBuilder.setProgress(0, 0, false).setOngoing(false)
+                    notifManager.cancel(notifID)
+                    val notifID = notifID + 1 // FIXME collisions
 
                     if(err != null || d == null) {
                         nBuilder.setContentTitle("Upload failed")
