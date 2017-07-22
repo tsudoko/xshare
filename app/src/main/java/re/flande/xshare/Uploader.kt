@@ -80,19 +80,17 @@ class Uploader : Activity() {
                         nBuilder.setContentTitle("Upload failed")
                                 .setContentText(err.toString() ?: "Empty response")
                         notifManager.notify(0, nBuilder.build())
-                    } else {
-                        val url = config.prepareUrl(d)
-                        val intent = PendingIntent.getActivity(
-                                this,
-                                0,
-                                Intent(Intent.ACTION_VIEW, Uri.parse(url)),
-                                0
-                        )
-                        nBuilder.setContentTitle("Upload successful")
-                                .setContentText(url)
-                                .setContentIntent(intent)
-                        notifManager.notify(0, nBuilder.build())
+
+                        return@responseString
                     }
+
+                    val url = config.prepareUrl(d)
+                    val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    val intent = PendingIntent.getActivity(this, 0, i, 0)
+                    nBuilder.setContentTitle("Upload successful")
+                            .setContentText(url)
+                            .setContentIntent(intent)
+                    notifManager.notify(0, nBuilder.build())
                 }
 
     }
