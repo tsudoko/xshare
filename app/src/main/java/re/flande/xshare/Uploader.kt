@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.Method
@@ -55,6 +56,8 @@ class Uploader : Activity() {
 
         notifManager.notify(0, nBuilder.build())
 
+        var time = SystemClock.uptimeMillis()
+
         Fuel.upload(rurl, Method.valueOf(config.RequestType ?: "POST"), config.Arguments?.toList())
                 .header(config.Headers)
                 .source { req, url ->
@@ -66,6 +69,13 @@ class Uploader : Activity() {
                     // .progress gets called once with read=$total, total=0 before resolving the hostname for reasons unknown to me
                     if(total == 0L)
                         return@progress
+
+                    // avoid slowing down the system with excessive notifications
+                    val curTime = SystemClock.uptimeMillis()
+                    if(curTime - time < 100)
+                        return@progress
+                    else
+                        time = curTime
 
                     val p: Int = (read * 100 / total).toInt()
                     nBuilder.setContentText("$p%")
