@@ -54,7 +54,7 @@ class Uploader : Activity() {
                     rurl = "http://" + rurl
 
                 val nBuilder = Notification.Builder(this)
-                        .setContentTitle("Uploading $path...")
+                        .setContentTitle(resources.getString(R.string.uploading_thing, path))
                         .setProgress(100, 0, true)
                         .setOngoing(true)
                         .setSmallIcon(R.mipmap.ic_launcher)
@@ -94,14 +94,14 @@ class Uploader : Activity() {
                             val notifID = notifID + 1 // FIXME collisions
 
                             if (err != null || d == null) {
-                                nBuilder.setContentTitle("Upload failed")
+                                nBuilder.setContentTitle(resources.getString(R.string.upload_failed))
                                         .setContentText(err.toString())
                                 notifManager.notify(notifID, nBuilder.build())
                             } else {
                                 val url = config.prepareUrl(d)
                                 val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                 val intent = PendingIntent.getActivity(this, 0, i, 0)
-                                nBuilder.setContentTitle("Upload successful")
+                                nBuilder.setContentTitle(resources.getString(R.string.upload_successful))
                                         .setContentText(url)
                                         .setContentIntent(intent)
                                 notifManager.notify(notifID, nBuilder.build())
@@ -109,7 +109,7 @@ class Uploader : Activity() {
                         }
             }
         } catch(e: FileNotFoundException) {
-            Toast.makeText(this, "$uploader not found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, resources.getString(R.string.thing_not_found, uploader), Toast.LENGTH_SHORT).show()
         } finally {
             parent?.setResult(RESULT_OK) ?: setResult(RESULT_OK)
             finish()

@@ -1,4 +1,16 @@
 <resources>
 	<string name="app_name">Xshare</string>
 	<string name="title_activity_upload">Upload</string>
+
+	<string name="default_uploader">Default uploader:\u20</string>
+	<string name="uploaders">Uploaders:\u20</string>
+
+	<string name="install_sample_config">Install Sample Config</string>
+	<string name="change_default_uploader">Change Default Uploader</string>
+
+	<string name="thing_not_found">%1$s not found</string>
+
+	<string name="uploading_thing">Uploading %1$s…</string>
+	<string name="upload_failed">Upload failed</string>
+	<string name="upload_successful">Upload successful</string>
 </resources>

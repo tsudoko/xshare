@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.text.Html
 import android.widget.Button
 import android.widget.TextView
 
@@ -20,7 +21,12 @@ class MainActivity : Activity() {
 
     fun updateInfo() {
         val current = prefs!!.getString("uploader", null)
-        val sb = StringBuilder("Default uploader: $current\nUploaders: ")
+        val sb = StringBuilder(resources.getString(R.string.default_uploader))
+        sb.append("<b>")
+        sb.append(current)
+        sb.append("</b><br />")
+        sb.append(resources.getString(R.string.uploaders))
+
         val files = this.filesDir.listFiles()
         for(i in files.indices) {
             sb.append(files[i].name)
@@ -30,7 +36,7 @@ class MainActivity : Activity() {
         }
 
         val uptv = findViewById(R.id.uploaders_text) as TextView
-        uptv.text = sb
+        uptv.text = Html.fromHtml(sb.toString())
     }
 
     override fun onStart() {
