@@ -1,7 +1,6 @@
 package re.flande.xshare
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import java.io.File
 
 class MainActivity : Activity() {
     var prefs: SharedPreferences? = null
@@ -30,7 +30,7 @@ class MainActivity : Activity() {
         sb.append("</b><br />")
         sb.append(resources.getString(R.string.uploaders))
 
-        val files = this.filesDir.listFiles()
+        val files = getExternalFilesDir(null).listFiles()
         for(i in files.indices) {
             sb.append(files[i].name)
 
@@ -48,7 +48,7 @@ class MainActivity : Activity() {
         updateInfo()
         val installSampleButton = findViewById(R.id.button) as Button
         installSampleButton.setOnClickListener {
-            openFileOutput("uguu.se.sxcu", Context.MODE_PRIVATE).use { out ->
+            File(getExternalFilesDir(null), "uguu.se.sxcu").outputStream().use { out ->
                 val in_ = resources.openRawResource(R.raw.uguu)
                 Util.copy(in_, out)
             }
@@ -58,7 +58,7 @@ class MainActivity : Activity() {
         val changeDefaultButton = findViewById(R.id.button2) as Button
         changeDefaultButton.setOnClickListener {
             val current = prefs!!.getString("uploader", null)
-            val files = this.filesDir.listFiles()
+            val files = getExternalFilesDir(null).listFiles()
             var new = current
 
             for(i in files.indices) {

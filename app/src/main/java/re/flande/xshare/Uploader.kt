@@ -14,6 +14,7 @@ import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.Method
 import com.google.gson.Gson
+import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
@@ -40,7 +41,7 @@ class Uploader : Activity() {
         }
 
         try {
-            openFileInput(uploader).use { f ->
+            File(getExternalFilesDir(null), uploader).inputStream().use { f ->
                 val config = Gson().fromJson(f.reader(), Config::class.java)
 
                 var rurl = config?.RequestURL ?: throw Exception("no uploader url specified")
