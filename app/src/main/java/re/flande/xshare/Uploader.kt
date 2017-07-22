@@ -32,7 +32,7 @@ class Uploader : Activity() {
 
         Log.d(TAG, "path is ${file.path}")
         val path = file.path ?: throw AssertionError("null file path, fix your shit")
-        val in_ = getContentResolver().openInputStream(file)
+        val in_ = contentResolver.openInputStream(file)
         val tempFile = createTempFile()
         tempFile.deleteOnExit()
         FileOutputStream(tempFile).use { out ->
@@ -59,7 +59,7 @@ class Uploader : Activity() {
 
                 Fuel.upload(rurl, Method.valueOf(config.RequestType ?: "POST"), config.Arguments?.toList())
                         .header(config.Headers)
-                        .source { req, url ->
+                        .source { req, _ ->
                             req.name = config.FileFormName
                             tempFile
                         }
@@ -81,7 +81,7 @@ class Uploader : Activity() {
                                     .setProgress(100, p, false)
                             notifManager.notify(notifID, nBuilder.build())
                         }
-                        .responseString { req, res, result ->
+                        .responseString { _, _, result ->
                             val (d, err) = result
                             nBuilder.setProgress(0, 0, false).setOngoing(false)
                             notifManager.cancel(notifID)

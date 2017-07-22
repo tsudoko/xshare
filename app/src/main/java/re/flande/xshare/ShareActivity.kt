@@ -15,31 +15,18 @@ class ShareActivity : Activity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val uploader = prefs.getString("uploader", null)
 
-        if(intent.action == Intent.ACTION_SEND) {
-            if(!intent.extras.containsKey(Intent.EXTRA_STREAM))
-                return
+        if(!intent.extras.containsKey(Intent.EXTRA_STREAM))
+            return
 
+        if(intent.action == Intent.ACTION_SEND) {
             val fileUri = intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM)
 
-            val intent = Intent(this, Uploader::class.java)
-            intent.putExtra("uploader", uploader)
-            intent.putExtra("file", fileUri)
-            startActivityForResult(intent, 0)
-            uploads++
+            upload(fileUri, uploader)
         } else if(intent.action == Intent.ACTION_SEND_MULTIPLE) {
-            if(!intent.extras.containsKey(Intent.EXTRA_STREAM))
-                return
-
             val uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
 
-            for(i in uris.indices) {
-                val intent = Intent(this, Uploader::class.java)
-                intent.putExtra("uploader", uploader)
-                intent.putExtra("file", uris[i])
-
-                startActivityForResult(intent, 0)
-                uploads++
-            }
+            for(u in uris)
+                upload(u, uploader)
         }
     }
 
@@ -51,5 +38,14 @@ class ShareActivity : Activity() {
             Log.d("Xshare", "last file, bailing out")
             finishAffinity()
         }
+    }
+
+    fun upload(uri: Uri, uploader: String) {
+        val intent = Intent(this, Uploader::class.java)
+        intent.putExtra("uploader", uploader)
+        intent.putExtra("file", uri)
+
+        startActivityForResult(intent, 0)
+        uploads++
     }
 }
