@@ -49,7 +49,8 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".AddUploaderActivity"
-			android:label="@string/add_uploader" />
+				  android:parentActivityName=".MainActivity"
+				  android:label="@string/add_uploader" />
 	</application>
 
 </manifest>
