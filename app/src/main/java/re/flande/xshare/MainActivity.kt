@@ -62,15 +62,10 @@ class MainActivity : Activity() {
             var new = current
 
             for(i in files.indices) {
-                if(files.count() == 1)
-                    new = files[i].name
-
-                if(i > 0 && i == files.count() - 1) {
-                    new = files[i-1].name
+                if(i == files.count() - 1) {
+                    new = files[0].name
                     break
-                }
-
-                if(i < files.count() - 1 && files[i].name == current) {
+                } else if(files[i].name == current) {
                     new = files[i+1].name
                     break
                 }
