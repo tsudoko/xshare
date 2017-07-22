@@ -18,8 +18,10 @@ class Config {
         if(URL.startsWith("${'$'}json:") && URL.endsWith("${'$'}")) {
             val query = "${'$'}." + URL.removePrefix("${'$'}json:").removeSuffix("${'$'}")
             return JsonPath.read(response, query)
-        } else {
+        } else if(URL.startsWith('$')) {
             throw NotImplementedError()
+        } else {
+            return response
         }
     }
 }
