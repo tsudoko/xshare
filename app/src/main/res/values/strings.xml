@@ -10,6 +10,8 @@
 
 	<string name="thing_not_found">%1$s not found</string>
 
+	<string name="importing">Importing…</string>
+
 	<string name="uploading_thing">Uploading %1$s…</string>
 	<string name="upload_failed">Upload failed</string>
 	<string name="upload_successful">Upload successful</string>
