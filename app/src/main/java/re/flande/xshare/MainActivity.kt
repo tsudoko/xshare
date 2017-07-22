@@ -59,6 +59,9 @@ class MainActivity : Activity() {
             var new = current
 
             for(i in files.indices) {
+                if(files.count() == 1)
+                    new = files[i].name
+
                 if(i > 0 && i == files.count() - 1) {
                     new = files[i-1].name
                     break
