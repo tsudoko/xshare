@@ -11,15 +11,18 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        openFileOutput("goud.sxcu", Context.MODE_PRIVATE).use { f ->
+        openFileOutput("uguu.sxcu", Context.MODE_PRIVATE).use { f ->
             f.write("""{
-  "Name": "yuri.fun",
+  "Name": "uguu.se",
   "DestinationType": "None",
   "RequestType": "POST",
-  "RequestURL": "a.yuri.fun/upload.php",
-  "FileFormName": "files[]",
-  "ResponseType": "Text",
-  "URL": "${'$'}json:files[0].url${'$'}"
+  "RequestURL": "https://uguu.se/api.php?d=upload-tool",
+  "FileFormName": "file",
+  "Arguments": {
+    "name": "",
+    "randomname": ""
+  },
+  "ResponseType": "Text"
 }""".toByteArray())
         }
         setContentView(R.layout.activity_main)
@@ -47,7 +50,7 @@ class MainActivity : Activity() {
             return
 
         val intent = Intent(this, Uploader::class.java)
-        intent.putExtra("uploader", "goud")
+        intent.putExtra("uploader", "uguu")
         intent.putExtra("file", data?.data)
         startActivityForResult(intent, 1)
     }

@@ -19,7 +19,7 @@ class ShareActivity : Activity() {
             val fileUri = intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM)
 
             val intent = Intent(this, Uploader::class.java)
-            intent.putExtra("uploader", "goud")
+            intent.putExtra("uploader", "uguu")
             intent.putExtra("file", fileUri)
             startActivityForResult(intent, 0)
             uploads++
@@ -31,7 +31,7 @@ class ShareActivity : Activity() {
 
             for(i in uris.indices) {
                 val intent = Intent(this, Uploader::class.java)
-                intent.putExtra("uploader", "goud")
+                intent.putExtra("uploader", "uguu")
                 intent.putExtra("file", uris[i])
 
                 startActivityForResult(intent, 0)
