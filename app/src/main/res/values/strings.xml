@@ -2,6 +2,14 @@
 	<string name="app_name">Xshare</string>
 	<string name="title_activity_upload">Upload</string>
 
+	<string name="add_uploader">Add uploader</string>
+
+	<string name="failed_to_add">Failed to add %1$s: %2$s</string>
+	<string name="added">%1$s added</string>
+
+	<string name="uploaders_repo_owner" translatable="false">ShareX</string>
+	<string name="uploaders_repo_name" translatable="false">CustomUploaders</string>
+
 	<string name="default_uploader">Default uploader:\u20</string>
 	<string name="uploaders">Uploaders:\u20</string>
 

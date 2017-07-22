@@ -38,15 +38,18 @@
 			android:theme="@android:style/Theme.NoDisplay">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
+
 				<category android:name="android.intent.category.DEFAULT" />
 
-				<data android:scheme="file"
-					  android:host="*"
-					  android:mimeType="*/*"
-					  android:pathPattern=".*\\.sxcu"
-					/>
+				<data
+					android:host="*"
+					android:mimeType="*/*"
+					android:pathPattern=".*\\.sxcu"
+					android:scheme="file" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".AddUploaderActivity"
+			android:label="@string/add_uploader" />
 	</application>
 
 </manifest>

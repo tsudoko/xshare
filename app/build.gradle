@@ -23,13 +23,14 @@ android {
 dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 
+
+	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 	compile 'com.google.code.gson:gson:2.8.1'
 	compile 'com.github.kittinunf.fuel:fuel:1.9.0'
 	compile 'com.github.kittinunf.fuel:fuel-android:1.9.0'
 	compile 'com.jayway.jsonpath:json-path:2.4.0'
 
 	testCompile 'junit:junit:4.12'
-	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 repositories {
 	mavenCentral()

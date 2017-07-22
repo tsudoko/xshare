@@ -2,10 +2,13 @@ package re.flande.xshare
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.Html
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 
@@ -78,5 +81,20 @@ class MainActivity : Activity() {
             editor?.commit()
             updateInfo()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        item ?: return false
+
+        if(item.itemId == R.id.action_add)
+            startActivity(Intent(this, AddUploaderActivity::class.java))
+
+        return super.onOptionsItemSelected(item)
     }
 }
