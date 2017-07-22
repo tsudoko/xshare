@@ -22,11 +22,10 @@
 		</activity>
 		<activity
 			android:name=".Uploader"
-			android:label="@string/title_activity_upload"
 			android:theme="@android:style/Theme.NoDisplay" />
 		<activity android:name=".ShareActivity"
 				  android:theme="@android:style/Theme.NoDisplay">
-			<intent-filter>
+			<intent-filter android:label="@string/title_activity_upload">
 				<action android:name="android.intent.action.SEND" />
 				<action android:name="android.intent.action.SEND_MULTIPLE" />
 				<data android:mimeType="*/*" />

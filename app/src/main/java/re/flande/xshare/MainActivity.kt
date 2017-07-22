@@ -40,12 +40,15 @@ class MainActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        if(requestCode == 1)
+            finishAffinity()
+
         if(resultCode != RESULT_OK)
             return
 
         val intent = Intent(this, Uploader::class.java)
         intent.putExtra("uploader", "goud")
         intent.putExtra("file", data?.data)
-        startActivity(intent)
+        startActivityForResult(intent, 1)
     }
 }

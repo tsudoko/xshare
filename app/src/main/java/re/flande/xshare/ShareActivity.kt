@@ -7,6 +7,7 @@ import android.os.Bundle
 
 class ShareActivity : Activity() {
     val LASTFILE = 199
+    var uploads = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +21,8 @@ class ShareActivity : Activity() {
             val intent = Intent(this, Uploader::class.java)
             intent.putExtra("uploader", "goud")
             intent.putExtra("file", fileUri)
-            startActivityForResult(intent, LASTFILE)
+            startActivityForResult(intent, 0)
+            uploads++
         } else if(intent.action == Intent.ACTION_SEND_MULTIPLE) {
             if(!intent.extras.containsKey(Intent.EXTRA_STREAM))
                 return
@@ -32,17 +34,19 @@ class ShareActivity : Activity() {
                 intent.putExtra("uploader", "goud")
                 intent.putExtra("file", uris[i])
 
-                if(i == uris.count() - 1)
-                    startActivityForResult(intent, LASTFILE)
-                else
-                    startActivity(intent)
+                startActivityForResult(intent, 0)
+                uploads++
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == LASTFILE)
-            finish()
+        Log.d("Xshare", "$uploads uploads, removing one")
+        uploads--
+        if(uploads == 0) {
+            Log.d("Xshare", "last file, bailing out")
+            finishAffinity()
+        }
     }
 }

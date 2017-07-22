@@ -22,6 +22,8 @@ class Uploader : Activity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "uploading")
         val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notifID = (Math.random() * 1000000000.0).toInt() // FIXME: there's a slim possibility of a collision
+        Log.d(TAG, "notifID $notifID")
 
         val uploader = intent.extras.getString("uploader") ?: throw AssertionError("no uploader specified")
         val file = intent.extras.getParcelable<Uri>("file")  ?: throw AssertionError("no file specified")
@@ -54,7 +56,7 @@ class Uploader : Activity() {
                 .setOngoing(true)
                 .setSmallIcon(R.mipmap.ic_launcher)
 
-        notifManager.notify(0, nBuilder.build())
+        notifManager.notify(notifID, nBuilder.build())
 
         var time = SystemClock.uptimeMillis()
 
@@ -65,7 +67,7 @@ class Uploader : Activity() {
                     tempFile
                 }
                 .progress { read, total ->
-                    Log.d(TAG, "read $read total $total")
+                    //Log.d(TAG, "read $read total $total")
                     // .progress gets called once with read=$total, total=0 before resolving the hostname for reasons unknown to me
                     if(total == 0L)
                         return@progress
@@ -80,7 +82,7 @@ class Uploader : Activity() {
                     val p: Int = (read * 100 / total).toInt()
                     nBuilder.setContentText("$p%")
                             .setProgress(100, p, false)
-                    notifManager.notify(0, nBuilder.build())
+                    notifManager.notify(notifID, nBuilder.build())
                 }
                 .responseString { req, res, result ->
                     val (d, err) = result
@@ -89,8 +91,10 @@ class Uploader : Activity() {
                     if(err != null || d == null) {
                         nBuilder.setContentTitle("Upload failed")
                                 .setContentText(err.toString() ?: "Empty response")
-                        notifManager.notify(0, nBuilder.build())
+                        notifManager.notify(notifID, nBuilder.build())
 
+                        parent?.setResult(RESULT_OK) ?: setResult(RESULT_OK)
+                        finish()
                         return@responseString
                     }
 
@@ -100,7 +104,10 @@ class Uploader : Activity() {
                     nBuilder.setContentTitle("Upload successful")
                             .setContentText(url)
                             .setContentIntent(intent)
-                    notifManager.notify(0, nBuilder.build())
+                    notifManager.notify(notifID, nBuilder.build())
+
+                    parent?.setResult(RESULT_OK) ?: setResult(RESULT_OK)
+                    finish()
                 }
 
     }
