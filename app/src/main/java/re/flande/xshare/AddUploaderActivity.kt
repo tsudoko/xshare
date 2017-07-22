@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.android.extension.responseJson
@@ -26,6 +28,13 @@ class AddUploaderActivity : Activity() {
         Fuel.get("$API_URL/repos/${resources.getString(R.string.uploaders_repo_owner)}/${resources.getString(R.string.uploaders_repo_name)}/contents/")
                 .header(mapOf("Accept" to "application/vnd.github.v$API_VER+json"))
                 .responseJson { req, res, result ->
+                    val progressBar = findViewById(R.id.progressBar) as ProgressBar
+                    val duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+                    progressBar.animate()
+                            .setDuration(duration)
+                            .alpha(0F)
+                            .withEndAction { progressBar.setVisibility(View.GONE) }
+
                     when(result) {
                         is Result.Failure -> {
                             // TODO: handle error
