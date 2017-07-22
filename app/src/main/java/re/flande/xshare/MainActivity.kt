@@ -45,19 +45,9 @@ class MainActivity : Activity() {
         updateInfo()
         val installSampleButton = findViewById(R.id.button) as Button
         installSampleButton.setOnClickListener {
-            openFileOutput("uguu.sxcu", Context.MODE_PRIVATE).use { f ->
-                f.write("""{
-  "Name": "uguu.se",
-  "DestinationType": "None",
-  "RequestType": "POST",
-  "RequestURL": "https://uguu.se/api.php?d=upload-tool",
-  "FileFormName": "file",
-  "Arguments": {
-    "name": "",
-    "randomname": ""
-  },
-  "ResponseType": "Text"
-}""".toByteArray())
+            openFileOutput("uguu.sxcu", Context.MODE_PRIVATE).use { out ->
+                val in_ = resources.openRawResource(R.raw.uguu)
+                Util.copy(in_, out)
             }
             updateInfo()
         }

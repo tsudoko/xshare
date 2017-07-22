@@ -35,14 +35,8 @@ class Uploader : Activity() {
         val in_ = getContentResolver().openInputStream(file)
         val tempFile = createTempFile()
         tempFile.deleteOnExit()
-        FileOutputStream(tempFile).use { f ->
-            var buf = ByteArray(4096)
-            var n: Int = 0
-
-            while(n != -1) {
-                f.write(buf, 0, n)
-                n = in_.read(buf)
-            }
+        FileOutputStream(tempFile).use { out ->
+            Util.copy(in_, out)
         }
 
         try {
