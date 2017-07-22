@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 
 class ShareActivity : Activity() {
@@ -11,6 +12,8 @@ class ShareActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val uploader = prefs.getString("uploader", null)
 
         if(intent.action == Intent.ACTION_SEND) {
             if(!intent.extras.containsKey(Intent.EXTRA_STREAM))
@@ -19,7 +22,7 @@ class ShareActivity : Activity() {
             val fileUri = intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM)
 
             val intent = Intent(this, Uploader::class.java)
-            intent.putExtra("uploader", "uguu")
+            intent.putExtra("uploader", uploader)
             intent.putExtra("file", fileUri)
             startActivityForResult(intent, 0)
             uploads++
@@ -31,7 +34,7 @@ class ShareActivity : Activity() {
 
             for(i in uris.indices) {
                 val intent = Intent(this, Uploader::class.java)
-                intent.putExtra("uploader", "uguu")
+                intent.putExtra("uploader", uploader)
                 intent.putExtra("file", uris[i])
 
                 startActivityForResult(intent, 0)

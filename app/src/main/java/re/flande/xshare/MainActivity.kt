@@ -2,17 +2,45 @@ package re.flande.xshare
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.widget.Button
+import android.widget.TextView
 
 class MainActivity : Activity() {
+    var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
-        openFileOutput("uguu.sxcu", Context.MODE_PRIVATE).use { f ->
-            f.write("""{
+        setContentView(R.layout.activity_main)
+    }
+
+    fun updateInfo() {
+        val current = prefs!!.getString("uploader", null)
+        val sb = StringBuilder("Default uploader: $current\nUploaders: ")
+        val files = this.filesDir.listFiles()
+        for(i in files.indices) {
+            sb.append(files[i].name)
+
+            if(i < files.count() - 1)
+                sb.append(", ")
+        }
+
+        val uptv = findViewById(R.id.uploaders_text) as TextView
+        uptv.text = sb
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        updateInfo()
+        val installSampleButton = findViewById(R.id.button) as Button
+        installSampleButton.setOnClickListener {
+            openFileOutput("uguu.sxcu", Context.MODE_PRIVATE).use { f ->
+                f.write("""{
   "Name": "uguu.se",
   "DestinationType": "None",
   "RequestType": "POST",
@@ -24,34 +52,32 @@ class MainActivity : Activity() {
   },
   "ResponseType": "Text"
 }""".toByteArray())
+            }
+            updateInfo()
         }
-        setContentView(R.layout.activity_main)
-    }
 
-    override fun onStart() {
-        super.onStart()
+        val changeDefaultButton = findViewById(R.id.button2) as Button
+        changeDefaultButton.setOnClickListener {
+            val current = prefs!!.getString("uploader", null)
+            val files = this.filesDir.listFiles()
+            var new = current
 
-        val butt = findViewById(R.id.button) as Button
-        butt.setOnClickListener {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            intent.setType("*/*")
-            startActivityForResult(intent, 0)
+            for(i in files.indices) {
+                if(i > 0 && i == files.count() - 1) {
+                    new = files[i-1].name
+                    break
+                }
+
+                if(i < files.count() - 1 && files[i].name == current) {
+                    new = files[i+1].name
+                    break
+                }
+            }
+
+            val editor = prefs!!.edit()
+            editor?.putString("uploader", new)
+            editor?.commit()
+            updateInfo()
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == 1)
-            finishAffinity()
-
-        if(resultCode != RESULT_OK)
-            return
-
-        val intent = Intent(this, Uploader::class.java)
-        intent.putExtra("uploader", "uguu")
-        intent.putExtra("file", data?.data)
-        startActivityForResult(intent, 1)
     }
 }

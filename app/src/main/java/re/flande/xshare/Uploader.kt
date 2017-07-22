@@ -46,7 +46,7 @@ class Uploader : Activity() {
         }
 
         try {
-            openFileInput("$uploader.sxcu").use { f ->
+            openFileInput(uploader).use { f ->
                 val config = Gson().fromJson(f.reader(), Config::class.java)
 
                 var rurl = config?.RequestURL ?: throw Exception("no uploader url specified")

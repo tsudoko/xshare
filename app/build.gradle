@@ -28,7 +28,6 @@ dependencies {
 	compile 'com.github.kittinunf.fuel:fuel-android:1.9.0'
 	compile 'com.jayway.jsonpath:json-path:2.4.0'
 
-	compile 'com.android.support.constraint:constraint-layout:1.0.2'
 	testCompile 'junit:junit:4.12'
 	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
