@@ -14,13 +14,11 @@
 
 	<Button
 		android:id="@+id/button"
-		android:layout_width="368dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/install_sample_config"
-		tools:layout_editor_absoluteX="8dp"
-		tools:layout_editor_absoluteY="33dp"
 		android:layout_below="@+id/uploaders_text"
-		android:layout_centerHorizontal="true" />
+		android:layout_centerHorizontal="true"
+		android:text="@string/install_sample_config" />
 
 	<Button
 		android:id="@+id/button2"
