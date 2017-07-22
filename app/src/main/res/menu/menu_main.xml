@@ -5,4 +5,8 @@
 		android:icon="@android:drawable/ic_menu_add"
 		android:showAsAction="ifRoom"
 		android:title="@string/add_uploader" />
+	<item
+		android:id="@+id/action_opendir"
+		android:showAsAction="ifRoom"
+		android:title="@string/open_uploader_dir" />
 </menu>

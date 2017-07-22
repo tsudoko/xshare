@@ -1,8 +1,11 @@
 package re.flande.xshare
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.Html
@@ -89,6 +92,19 @@ class MainActivity : Activity() {
 
         if(item.itemId == R.id.action_add)
             startActivity(Intent(this, AddUploaderActivity::class.java))
+        if(item.itemId == R.id.action_opendir) {
+            val intent = Intent(Intent.ACTION_VIEW)
+            val uri = Uri.fromFile(getExternalFilesDir(null))
+            intent.setDataAndType(uri, "resource/folder")
+            try {
+                startActivity(intent)
+            } catch(e: ActivityNotFoundException) {
+                AlertDialog.Builder(this)
+                        .setMessage(resources.getString(R.string.no_file_managers, uri.path))
+                        .setPositiveButton(android.R.string.ok, {_, _ ->})
+                        .show()
+            }
+        }
 
         return super.onOptionsItemSelected(item)
     }

@@ -3,9 +3,12 @@
 	<string name="title_activity_upload">Upload</string>
 
 	<string name="add_uploader">Add uploader</string>
+	<string name="open_uploader_dir">Browse uploaders</string>
 
 	<string name="failed_to_add">Failed to add %1$s: %2$s</string>
 	<string name="added">%1$s added</string>
+
+	<string name="no_file_managers"><![CDATA[None of the installed file managers support the resource/folder MIME type. Open %1$s manually.]]></string>
 
 	<string name="uploaders_repo_owner" translatable="false">ShareX</string>
 	<string name="uploaders_repo_name" translatable="false">CustomUploaders</string>
