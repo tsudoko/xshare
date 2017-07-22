@@ -5,10 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.view.ViewStub
+import android.widget.*
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.result.Result
@@ -33,13 +31,26 @@ class AddUploaderActivity : Activity() {
                     progressBar.animate()
                             .setDuration(duration)
                             .alpha(0F)
-                            .withEndAction { progressBar.setVisibility(View.GONE) }
+                            .withEndAction { progressBar.visibility = View.GONE }
 
                     when(result) {
                         is Result.Failure -> {
-                            // TODO: handle error
-                            Log.d("Xshare", "something happened")
-                            Log.d("Xshare", "${result.error}")
+                            val layout = findViewById(R.id.addUploaderLayout)
+                            val lv = findViewById(R.id.uploader_list) as ListView
+                            val stub = findViewById(R.id.viewStub) as ViewStub?
+
+                            stub ?: return@responseJson
+
+                            layout.setBackgroundColor(resources.getColor(R.color.somethingHappened))
+                            lv.visibility = View.GONE
+                            stub.setOnInflateListener { _, inflated ->
+                                val tv = inflated.findViewById(R.id.errorText) as TextView
+                                val butt = inflated.findViewById(R.id.tryAgain) as Button
+
+                                tv.text = "${result.error}"
+                                butt.setOnClickListener { recreate() }
+                            }
+                            stub.inflate()
                         }
                         is Result.Success -> {
                             val data = result.value.array()

@@ -13,6 +13,9 @@
 	<string name="uploaders_repo_owner" translatable="false">ShareX</string>
 	<string name="uploaders_repo_name" translatable="false">CustomUploaders</string>
 
+	<string name="something_happened">Something happened</string>
+	<string name="try_again">Try again</string>
+
 	<string name="default_uploader">Default uploader:\u20</string>
 	<string name="uploaders">Uploaders:\u20</string>
 
