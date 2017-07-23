@@ -16,7 +16,7 @@
 		android:id="@+id/button"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/uploaders_text"
+		android:layout_below="@+id/switchAutoclip"
 		android:layout_centerHorizontal="true"
 		android:text="@string/install_sample_config" />
 
@@ -27,5 +27,13 @@
 		android:layout_below="@+id/button"
 		android:layout_centerHorizontal="true"
 		android:text="@string/change_default_uploader" />
+
+	<Switch
+		android:id="@+id/switchAutoclip"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_below="@+id/uploaders_text"
+		android:text="@string/autoclip" />
 
 </RelativeLayout>

@@ -4,11 +4,14 @@ import android.app.Activity
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
@@ -25,6 +28,9 @@ class Uploader : Activity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "uploading")
         val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val clipManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
         val notifID = (Math.random() * 1000000000.0).toInt() // FIXME: there's a slim possibility of a collision
         Log.d(TAG, "notifID $notifID")
 
@@ -105,6 +111,9 @@ class Uploader : Activity() {
                                         .setContentText(url)
                                         .setContentIntent(intent)
                                 notifManager.notify(notifID, nBuilder.build())
+
+                                if(prefs.getBoolean("autoclip", false))
+                                    clipManager.primaryClip = ClipData.newPlainText("URL", url)
                             }
                         }
             }

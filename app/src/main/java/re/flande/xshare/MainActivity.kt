@@ -12,6 +12,7 @@ import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.Switch
 import android.widget.TextView
 import java.io.File
 
@@ -27,6 +28,10 @@ class MainActivity : Activity() {
 
     fun updateInfo() {
         val current = prefs!!.getString("uploader", null)
+        val autoclip = prefs!!.getBoolean("autoclip", false)
+        val clipSwitch = findViewById(R.id.switchAutoclip) as Switch
+        clipSwitch.isChecked = autoclip
+
         val sb = StringBuilder(resources.getString(R.string.default_uploader))
         sb.append("<b>")
         sb.append(current?.removeSuffix(".sxcu"))
@@ -76,6 +81,15 @@ class MainActivity : Activity() {
 
             val editor = prefs!!.edit()
             editor?.putString("uploader", new)
+            editor?.commit()
+            updateInfo()
+        }
+
+        val autoclipSwitch = findViewById(R.id.switchAutoclip) as Switch
+        autoclipSwitch.setOnClickListener { v ->
+            v as Switch
+            val editor = prefs!!.edit()
+            editor?.putBoolean("autoclip", v.isChecked)
             editor?.commit()
             updateInfo()
         }
