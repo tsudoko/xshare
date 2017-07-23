@@ -23,6 +23,7 @@
 	<string name="change_default_uploader">Change Default Uploader</string>
 
 	<string name="thing_not_found">%1$s not found</string>
+	<string name="no_uploader_set">No default uploader set</string>
 
 	<string name="importing">Importing…</string>
 

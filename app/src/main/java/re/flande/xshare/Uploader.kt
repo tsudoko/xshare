@@ -28,8 +28,13 @@ class Uploader : Activity() {
         val notifID = (Math.random() * 1000000000.0).toInt() // FIXME: there's a slim possibility of a collision
         Log.d(TAG, "notifID $notifID")
 
-        val uploader = intent.extras.getString("uploader") ?: throw AssertionError("no uploader specified")
+        val uploader = intent.extras.getString("uploader")
         val file = intent.extras.getParcelable<Uri>("file")  ?: throw AssertionError("no file specified")
+
+        if(uploader == null) {
+            Toast.makeText(this, R.string.no_uploader_set, Toast.LENGTH_SHORT).show()
+            return
+        }
 
         Log.d(TAG, "path is ${file.path}")
         val path = file.path ?: throw AssertionError("null file path, fix your shit")
