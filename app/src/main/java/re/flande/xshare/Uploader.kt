@@ -68,7 +68,7 @@ class Uploader : Activity() {
                     rurl = "http://" + rurl
 
                 val nBuilder = Notification.Builder(this)
-                        .setContentTitle(resources.getString(R.string.uploading_thing, path))
+                        .setContentTitle(resources.getString(R.string.uploading_thing, blob?.name ?: path))
                         .setProgress(100, 0, true)
                         .setOngoing(true)
                         .setSmallIcon(R.mipmap.ic_launcher)
