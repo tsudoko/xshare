@@ -1,7 +1,6 @@
 package re.flande.xshare
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +9,7 @@ import android.widget.*
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.result.Result
+import java.io.File
 
 class AddUploaderActivity : Activity() {
     val API_URL = "https://api.github.com"
@@ -90,7 +90,7 @@ class AddUploaderActivity : Activity() {
                             Toast.makeText(this, resources.getString(R.string.failed_to_add, name, result.error), Toast.LENGTH_SHORT).show()
                         }
                         is Result.Success -> {
-                            openFileOutput(name, Context.MODE_PRIVATE).use { f ->
+                            File(getExternalFilesDir(null), name).outputStream().use { f ->
                                 f.write(result.value)
                             }
                             Toast.makeText(this, resources.getString(R.string.added, name), Toast.LENGTH_SHORT).show()
