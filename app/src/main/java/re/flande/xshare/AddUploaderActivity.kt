@@ -10,6 +10,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.result.Result
 import java.io.File
+import java.net.URLDecoder
 
 class AddUploaderActivity : Activity() {
     val API_URL = "https://api.github.com"
@@ -81,7 +82,7 @@ class AddUploaderActivity : Activity() {
     }
 
     fun downloadFile(addr: String) {
-        val name = addr.split('/').last()
+        val name = URLDecoder.decode(addr.split('/').last(), "UTF-8")
 
         Fuel.get(addr)
                 .response { req, res, result ->
