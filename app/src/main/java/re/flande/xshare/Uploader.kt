@@ -12,14 +12,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import android.preference.PreferenceManager
+import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.Blob
 import com.github.kittinunf.fuel.core.Method
 import com.google.gson.Gson
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 
 class Uploader : Activity() {
     val TAG = "Xshare"
@@ -44,11 +45,18 @@ class Uploader : Activity() {
 
         Log.d(TAG, "path is ${file.path}")
         val path = file.path ?: throw AssertionError("null file path, fix your shit")
-        val in_ = contentResolver.openInputStream(file)
-        val tempFile = createTempFile()
-        tempFile.deleteOnExit()
-        FileOutputStream(tempFile).use { out ->
-            Util.copy(in_, out)
+        var blob: Blob? = null
+        contentResolver.query(file, null, null, null, null).use { cursor ->
+            cursor.moveToFirst()
+            val name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            val size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
+
+            Log.d(TAG, "name $name size $size")
+
+            contentResolver.openFileDescriptor(file, "r").use { fd ->
+                Log.d(TAG, "fd size ${fd.statSize}")
+                blob = Blob(name, fd.statSize, { contentResolver.openInputStream(file) })
+            }
         }
 
         try {
@@ -71,12 +79,12 @@ class Uploader : Activity() {
 
                 Fuel.upload(rurl, Method.valueOf(config.RequestType ?: "POST"), config.Arguments?.toList())
                         .header(config.Headers)
-                        .source { req, _ ->
+                        .blob { req, _ ->
                             req.name = config.FileFormName
-                            tempFile
+                            blob ?: throw AssertionError("empty blob")
                         }
                         .progress { read, total ->
-                            //Log.d(TAG, "read $read total $total")
+                            Log.d(TAG, "read $read total $total")
                             // .progress gets called once with read=$total, total=0 before resolving the hostname for reasons unknown to me
                             if (total == 0L)
                                 return@progress
