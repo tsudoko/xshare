@@ -43,18 +43,13 @@ class Uploader : Activity() {
             return
         }
 
-        Log.d(TAG, "path is ${file.path}")
-        val path = file.path ?: throw AssertionError("null file path, fix your shit")
+        val path = file.path ?: throw AssertionError("null URI path")
         var blob: Blob? = null
         contentResolver.query(file, null, null, null, null).use { cursor ->
             cursor.moveToFirst()
             val name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-            val size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
-
-            Log.d(TAG, "name $name size $size")
 
             contentResolver.openFileDescriptor(file, "r").use { fd ->
-                Log.d(TAG, "fd size ${fd.statSize}")
                 blob = Blob(name, fd.statSize, { contentResolver.openInputStream(file) })
             }
         }
@@ -79,12 +74,12 @@ class Uploader : Activity() {
 
                 Fuel.upload(rurl, Method.valueOf(config.RequestType ?: "POST"), config.Arguments?.toList())
                         .header(config.Headers)
-                        .blob { req, _ ->
-                            req.name = config.FileFormName
+                        .name { config.FileFormName }
+                        .blob { _, _ ->
                             blob ?: throw AssertionError("empty blob")
                         }
                         .progress { read, total ->
-                            Log.d(TAG, "read $read total $total")
+                            //Log.d(TAG, "read $read total $total")
                             // .progress gets called once with read=$total, total=0 before resolving the hostname for reasons unknown to me
                             if (total == 0L)
                                 return@progress
