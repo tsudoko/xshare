@@ -96,6 +96,7 @@ class Uploader : Activity() {
                     if (err != null || d == null) {
                         nBuilder.setContentTitle(resources.getString(R.string.upload_failed))
                                 .setContentText(err.toString())
+                                .setStyle(Notification.BigTextStyle().bigText(err.toString()))
                         notifManager.notify(notifID, nBuilder.build())
                     } else {
                         val url = config.prepareUrl(d)
@@ -103,6 +104,7 @@ class Uploader : Activity() {
                         val intent = PendingIntent.getActivity(this, 0, i, 0)
                         nBuilder.setContentTitle(resources.getString(R.string.upload_successful))
                                 .setContentText(url)
+                                .setStyle(Notification.BigTextStyle().bigText(url))
                                 .setContentIntent(intent)
                         notifManager.notify(notifID, nBuilder.build())
 
