@@ -43,16 +43,7 @@ class Uploader : Activity() {
             return
         }
 
-        val path = file.path ?: throw AssertionError("null URI path")
-        var blob: Blob? = null
-        contentResolver.query(file, null, null, null, null).use { cursor ->
-            cursor.moveToFirst()
-            val name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-
-            contentResolver.openFileDescriptor(file, "r").use { fd ->
-                blob = Blob(name, fd.statSize, { contentResolver.openInputStream(file) })
-            }
-        }
+        val blob = blobFromUri(file)
 
         try {
             File(getExternalFilesDir(null), uploader).inputStream().use { f ->
@@ -63,7 +54,7 @@ class Uploader : Activity() {
                     rurl = "http://" + rurl
 
                 val nBuilder = Notification.Builder(this)
-                        .setContentTitle(resources.getString(R.string.uploading_thing, blob?.name ?: path))
+                        .setContentTitle(resources.getString(R.string.uploading_thing, blob.name))
                         .setProgress(100, 0, true)
                         .setOngoing(true)
                         .setSmallIcon(R.mipmap.ic_launcher)
@@ -75,9 +66,7 @@ class Uploader : Activity() {
                 Fuel.upload(rurl, Method.valueOf(config.RequestType ?: "POST"), config.Arguments?.toList())
                         .header(config.Headers)
                         .name { config.FileFormName }
-                        .blob { _, _ ->
-                            blob ?: throw AssertionError("empty blob")
-                        }
+                        .blob { _, _ -> blob }
                         .progress { read, total ->
                             //Log.d(TAG, "read $read total $total")
                             // .progress gets called once with read=$total, total=0 before resolving the hostname for reasons unknown to me
@@ -128,4 +117,14 @@ class Uploader : Activity() {
         }
     }
 
+    fun blobFromUri(uri: Uri): Blob {
+        contentResolver.query(uri, null, null, null, null).use { cursor ->
+            cursor.moveToFirst()
+            val name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+
+            contentResolver.openFileDescriptor(uri, "r").use { fd ->
+                return Blob(name, fd.statSize, { contentResolver.openInputStream(uri) })
+            }
+        }
+    }
 }
