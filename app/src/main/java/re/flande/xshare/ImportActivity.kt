@@ -14,7 +14,7 @@ class ImportActivity : Activity() {
         contentResolver.openInputStream(intent.data).use { in_ ->
             val name = intent.data.path.split("/").last()
             openFileOutput(name, Context.MODE_PRIVATE).use { out ->
-                Util.copy(in_, out)
+                copy(in_, out)
             }
         }
         // TODO: config validation

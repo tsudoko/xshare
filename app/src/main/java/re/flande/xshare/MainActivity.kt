@@ -58,7 +58,7 @@ class MainActivity : Activity() {
         installSampleButton.setOnClickListener {
             File(getExternalFilesDir(null), "uguu.se.sxcu").outputStream().use { out ->
                 val in_ = resources.openRawResource(R.raw.uguu)
-                Util.copy(in_, out)
+                copy(in_, out)
             }
             updateInfo()
         }
