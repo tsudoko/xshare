@@ -23,7 +23,6 @@ import java.io.File
 import java.io.FileNotFoundException
 
 class Uploader : Activity() {
-    val TAG = "Xshare"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

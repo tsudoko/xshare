@@ -13,8 +13,6 @@ import java.io.File
 import java.net.URLDecoder
 
 class AddUploaderActivity : Activity() {
-    val API_URL = "https://api.github.com"
-    val API_VER = "3"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +22,8 @@ class AddUploaderActivity : Activity() {
     override fun onStart() {
         super.onStart()
 
-        Fuel.get("$API_URL/repos/${resources.getString(R.string.uploaders_repo_owner)}/${resources.getString(R.string.uploaders_repo_name)}/contents/")
-                .header(mapOf("Accept" to "application/vnd.github.v$API_VER+json"))
+        Fuel.get("$GITHUB_APIURL/repos/${resources.getString(R.string.uploaders_repo_owner)}/${resources.getString(R.string.uploaders_repo_name)}/contents/")
+                .header(mapOf("Accept" to "application/vnd.github.v$GITHUB_APIVER+json"))
                 .responseJson { req, res, result ->
                     findViewById(R.id.progressBar).fadeOut()
 
