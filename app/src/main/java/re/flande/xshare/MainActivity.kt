@@ -86,10 +86,9 @@ class MainActivity : Activity() {
         }
 
         val autoclipSwitch = findViewById(R.id.switchAutoclip) as Switch
-        autoclipSwitch.setOnClickListener { v ->
-            v as Switch
+        autoclipSwitch.setOnClickListener {
             val editor = prefs.edit()
-            editor?.putBoolean("autoclip", v.isChecked)
+            editor?.putBoolean("autoclip", (it as Switch).isChecked)
             editor?.commit()
             updateInfo(prefs)
         }
@@ -101,7 +100,6 @@ class MainActivity : Activity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         item ?: return false
 
         if(item.itemId == R.id.action_add)
