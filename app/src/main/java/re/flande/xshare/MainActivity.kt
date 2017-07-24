@@ -17,18 +17,16 @@ import android.widget.TextView
 import java.io.File
 
 class MainActivity : Activity() {
-    var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         setContentView(R.layout.activity_main)
     }
 
-    fun updateInfo() {
-        val current = prefs!!.getString("uploader", null)
-        val autoclip = prefs!!.getBoolean("autoclip", false)
+    fun updateInfo(prefs: SharedPreferences) {
+        val current = prefs.getString("uploader", null)
+        val autoclip = prefs.getBoolean("autoclip", false)
         val clipSwitch = findViewById(R.id.switchAutoclip) as Switch
         clipSwitch.isChecked = autoclip
 
@@ -53,19 +51,21 @@ class MainActivity : Activity() {
     override fun onStart() {
         super.onStart()
 
-        updateInfo()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        updateInfo(prefs)
+
         val installSampleButton = findViewById(R.id.button) as Button
         installSampleButton.setOnClickListener {
             File(getExternalFilesDir(null), "uguu.se.sxcu").outputStream().use { out ->
                 val in_ = resources.openRawResource(R.raw.uguu)
                 copy(in_, out)
             }
-            updateInfo()
+            updateInfo(prefs)
         }
 
         val changeDefaultButton = findViewById(R.id.button2) as Button
         changeDefaultButton.setOnClickListener {
-            val current = prefs!!.getString("uploader", null)
+            val current = prefs.getString("uploader", null)
             val files = getExternalFilesDir(null).listFiles()
             var new = current
 
@@ -79,19 +79,19 @@ class MainActivity : Activity() {
                 }
             }
 
-            val editor = prefs!!.edit()
+            val editor = prefs.edit()
             editor?.putString("uploader", new)
             editor?.commit()
-            updateInfo()
+            updateInfo(prefs)
         }
 
         val autoclipSwitch = findViewById(R.id.switchAutoclip) as Switch
         autoclipSwitch.setOnClickListener { v ->
             v as Switch
-            val editor = prefs!!.edit()
+            val editor = prefs.edit()
             editor?.putBoolean("autoclip", v.isChecked)
             editor?.commit()
-            updateInfo()
+            updateInfo(prefs)
         }
     }
 
