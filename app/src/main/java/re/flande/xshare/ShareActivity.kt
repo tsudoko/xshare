@@ -5,10 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 
 class ShareActivity : Activity() {
-    var uploads = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,24 +26,15 @@ class ShareActivity : Activity() {
             for(u in uris)
                 upload(u, uploader)
         }
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Log.d("Xshare", "$uploads uploads, removing one")
-        uploads--
-        if(uploads == 0) {
-            Log.d("Xshare", "last file, bailing out")
-            finishAffinity()
-        }
+        finishAffinity()
     }
 
     fun upload(uri: Uri, uploader: String) {
-        val intent = Intent(this, Uploader::class.java)
+        val intent = Intent(applicationContext, Uploader::class.java)
         intent.putExtra("uploader", uploader)
         intent.putExtra("file", uri)
-
-        startActivityForResult(intent, 0)
-        uploads++
+        intent.flags = Intent.FLAG_ACTIVITY_NO_USER_ACTION
+        startActivity(intent)
     }
 }
