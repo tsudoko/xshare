@@ -27,12 +27,7 @@ class AddUploaderActivity : Activity() {
         Fuel.get("$API_URL/repos/${resources.getString(R.string.uploaders_repo_owner)}/${resources.getString(R.string.uploaders_repo_name)}/contents/")
                 .header(mapOf("Accept" to "application/vnd.github.v$API_VER+json"))
                 .responseJson { req, res, result ->
-                    val progressBar = findViewById(R.id.progressBar) as ProgressBar
-                    val duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-                    progressBar.animate()
-                            .setDuration(duration)
-                            .alpha(0F)
-                            .withEndAction { progressBar.visibility = View.GONE }
+                    findViewById(R.id.progressBar).fadeOut()
 
                     when(result) {
                         is Result.Failure -> {
