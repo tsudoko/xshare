@@ -1,20 +1,67 @@
 package re.flande.xshare
 
+import android.Manifest
+import android.annotation.TargetApi
 import android.app.Activity
+import android.app.Notification
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 
 class ShareActivity : Activity() {
+    val REQUESTPERMS_CODE = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val uploader = prefs.getString("uploader", null)
 
         if(!intent.extras.containsKey(Intent.EXTRA_STREAM))
             return
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            requestPerms()
+        else
+            doUploads()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?, grantResults: IntArray?) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        grantResults ?: return
+
+        for(res in grantResults) {
+            if(res != PackageManager.PERMISSION_GRANTED) {
+                val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val notif = Notification.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(resources.getString(R.string.unable_to_upload))
+                        .setContentText(resources.getString(R.string.no_storage_permission))
+                        .build()
+                notifManager.notify(0, notif)
+
+                finishAffinity()
+                return
+            }
+        }
+
+        doUploads()
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    fun requestPerms() {
+        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUESTPERMS_CODE)
+        else
+            doUploads()
+    }
+
+    fun doUploads() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val uploader = prefs.getString("uploader", null)
 
         if(intent.action == Intent.ACTION_SEND) {
             val fileUri = intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM)

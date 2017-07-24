@@ -31,4 +31,6 @@
 	<string name="uploading_thing">Uploading %1$s…</string>
 	<string name="upload_failed">Upload failed</string>
 	<string name="upload_successful">Upload successful</string>
+	<string name="unable_to_upload">Unable to upload</string>
+	<string name="no_storage_permission">No permission to read external storage</string>
 </resources>
