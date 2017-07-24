@@ -26,7 +26,7 @@
 			android:theme="@android:style/Theme.NoDisplay" />
 		<activity
 			android:name=".ShareActivity"
-			android:theme="@android:style/Theme.NoDisplay">
+			android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
 			<intent-filter android:label="@string/title_activity_upload">
 				<action android:name="android.intent.action.SEND" />
 				<action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -37,7 +37,7 @@
 		</activity>
 		<activity
 			android:name=".ImportActivity"
-			android:theme="@android:style/Theme.NoDisplay">
+			android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 
