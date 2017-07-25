@@ -27,7 +27,7 @@
 		<activity
 			android:name=".ShareActivity"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
-			<intent-filter android:label="@string/title_activity_upload">
+			<intent-filter>
 				<action android:name="android.intent.action.SEND" />
 				<action android:name="android.intent.action.SEND_MULTIPLE" />
 				<category android:name="android.intent.category.DEFAULT" />

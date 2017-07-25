@@ -1,6 +1,5 @@
 <resources>
 	<string name="app_name">Xshare</string>
-	<string name="title_activity_upload">Upload</string>
 
 	<string name="add_uploader">Add uploader</string>
 	<string name="open_uploader_dir">Browse uploaders</string>
