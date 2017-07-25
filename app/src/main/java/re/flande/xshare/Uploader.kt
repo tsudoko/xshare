@@ -87,6 +87,10 @@ class Uploader : Activity() {
                             .setProgress(100, p, false)
                     notifManager.notify(notifID, nBuilder.build())
                 }
+                .interrupt {
+                    // unfortunately this function isn't called when the app is killed, need to find some other way
+                    notifManager.cancel(notifID)
+                }
                 .responseString { _, _, result ->
                     val (d, err) = result
                     nBuilder.setProgress(0, 0, false).setOngoing(false)
