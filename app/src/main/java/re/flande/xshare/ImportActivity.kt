@@ -40,7 +40,7 @@ class ImportActivity : Activity() {
         val pd = ProgressDialog.show(this, "", resources.getString(R.string.importing))
         contentResolver.openInputStream(intent.data).use { in_ ->
             File(getExternalFilesDir(null), name).outputStream().use { out ->
-                copy(in_, out)
+                in_.copyTo(out)
             }
         }
         // TODO: config validation

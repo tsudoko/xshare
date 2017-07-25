@@ -1,18 +1,6 @@
 package re.flande.xshare
 
 import android.view.View
-import java.io.InputStream
-import java.io.OutputStream
-
-fun copy(in_: InputStream, out: OutputStream) {
-    val buf = ByteArray(4096)
-    var n = 0
-
-    while (n != -1) {
-        out.write(buf, 0, n)
-        n = in_.read(buf)
-    }
-}
 
 fun View.fade(show: Boolean, duration: Long) {
     animate()

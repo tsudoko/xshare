@@ -57,8 +57,9 @@ class MainActivity : Activity() {
         val installSampleButton = findViewById(R.id.button) as Button
         installSampleButton.setOnClickListener {
             File(getExternalFilesDir(null), "uguu.se.sxcu").outputStream().use { out ->
-                val in_ = resources.openRawResource(R.raw.uguu)
-                copy(in_, out)
+                resources.openRawResource(R.raw.uguu).use {
+                    it.copyTo(out)
+                }
             }
             updateInfo(prefs)
         }
