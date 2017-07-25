@@ -48,6 +48,18 @@
 					android:mimeType="*/*"
 					android:pathPattern=".*\\.sxcu"
 					android:scheme="file" />
+				<data
+					android:host="*"
+					android:mimeType="*/*"
+					android:pathPattern=".*\\.sxcu"
+					android:scheme="content" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+
+				<data android:scheme="content" android:mimeType="application/json" />
+				<data android:scheme="content" android:mimeType="application/octet-stream" />
 			</intent-filter>
 		</activity>
 		<activity android:name=".AddUploaderActivity"
