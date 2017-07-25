@@ -60,7 +60,7 @@ class Uploader : Activity() {
                 .setContentTitle(resources.getString(R.string.uploading_thing, blob.name))
                 .setProgress(100, 0, true)
                 .setOngoing(true)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(android.R.drawable.stat_sys_upload)
         notifManager.notify(notifID, nBuilder.build())
 
         var time = SystemClock.uptimeMillis()
@@ -93,7 +93,9 @@ class Uploader : Activity() {
                 }
                 .responseString { _, _, result ->
                     val (d, err) = result
-                    nBuilder.setProgress(0, 0, false).setOngoing(false)
+                    nBuilder.setProgress(0, 0, false)
+                            .setOngoing(false)
+                            .setSmallIcon(android.R.drawable.stat_sys_upload_done)
                     notifManager.cancel(notifID)
                     val notifID = notifID + 1 // FIXME collisions
 
