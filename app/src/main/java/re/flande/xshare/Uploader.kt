@@ -57,7 +57,7 @@ class Uploader : Activity() {
             rurl = "http://" + rurl
 
         val nBuilder = Notification.Builder(this)
-                .setContentTitle(resources.getString(R.string.uploading_thing, blob.name))
+                .setContentTitle(blob.name)
                 .setProgress(100, 0, true)
                 .setOngoing(true)
                 .setSmallIcon(android.R.drawable.stat_sys_upload)
@@ -100,15 +100,15 @@ class Uploader : Activity() {
                     val notifID = notifID + 1 // FIXME collisions
 
                     if (err != null || d == null) {
-                        nBuilder.setContentTitle(resources.getString(R.string.upload_failed))
-                                .setContentText(err.toString())
+                        nBuilder.setContentTitle(blob.name)
+                                .setContentText(resources.getString(R.string.upload_failed))
                                 .setStyle(Notification.BigTextStyle().bigText(err.toString()))
                         notifManager.notify(notifID, nBuilder.build())
                     } else {
                         val url = config.prepareUrl(d)
                         val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                         val intent = PendingIntent.getActivity(this, 0, i, 0)
-                        nBuilder.setContentTitle(resources.getString(R.string.upload_successful))
+                        nBuilder.setContentTitle(blob.name)
                                 .setContentText(url)
                                 .setStyle(Notification.BigTextStyle().bigText(url))
                                 .setContentIntent(intent)
