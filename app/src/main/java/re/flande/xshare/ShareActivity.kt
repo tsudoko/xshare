@@ -78,7 +78,7 @@ class ShareActivity : Activity() {
     }
 
     fun upload(uri: Uri, uploader: String) {
-        val intent = Intent(applicationContext, Uploader::class.java)
+        val intent = Intent(this, Uploader::class.java)
         intent.putExtra("uploader", uploader)
         intent.putExtra("file", uri)
         intent.flags = Intent.FLAG_ACTIVITY_NO_USER_ACTION
