@@ -5,6 +5,7 @@ import com.jayway.jsonpath.JsonPath
 import org.xml.sax.InputSource
 import javax.xml.xpath.XPathFactory
 
+// ref: https://github.com/ShareX/ShareX/raw/master/ShareX.UploadersLib/Helpers/CustomUploaderItem.cs
 class Config {
     internal var Name: String? = null
     internal var DestinationType: String? = null
