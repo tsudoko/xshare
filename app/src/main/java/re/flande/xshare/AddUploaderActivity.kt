@@ -1,6 +1,7 @@
 package re.flande.xshare
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,7 +10,6 @@ import android.widget.*
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.result.Result
-import java.io.File
 import java.net.URLDecoder
 
 class AddUploaderActivity : Activity() {
@@ -84,10 +84,12 @@ class AddUploaderActivity : Activity() {
                             Toast.makeText(this, resources.getString(R.string.failed_to_add, name, result.error), Toast.LENGTH_SHORT).show()
                         }
                         is Result.Success -> {
-                            File(getExternalFilesDir(null), name).outputStream().use { f ->
-                                f.write(result.value)
-                            }
-                            Toast.makeText(this, resources.getString(R.string.thing_added, name), Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, ImportActivity::class.java)
+                                    .putExtra("name", name)
+                                    .putExtra("contents", result.value)
+                                    .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
                         }
                     }
                 }

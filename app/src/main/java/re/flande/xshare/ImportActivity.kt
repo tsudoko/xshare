@@ -2,7 +2,6 @@ package re.flande.xshare
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import java.io.File
 import java.io.InputStream
@@ -12,36 +11,45 @@ class ImportActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val name = intent.data.getFilename(this)
-        Log.d(TAG, "contentresolver name $name")
+        val contents = intent.extras?.getByteArray("contents")
 
-        if(name.split('.').last() != "sxcu") {
+        val name: String
+        val in_: InputStream
+
+        if(contents == null) {
+            name = intent.data.getFilename(this)
+            in_ = contentResolver.openInputStream(intent.data)
+        } else {
+            name = intent.extras.getString("name")
+            in_ = contents.inputStream()
+        }
+
+        if (name.split('.').last() != "sxcu") {
             getFatalDialogBuilder(this)
                     .setMessage(R.string.file_not_sxcu)
-                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> import(name + ".sxcu") })
+                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> import(name + ".sxcu", in_) })
                     .setNegativeButton(android.R.string.cancel, { _, _ -> })
                     .show()
         } else {
-            import(name)
+            import(name, in_)
         }
     }
 
-    fun import(name: String) {
-        val in_ = contentResolver.openInputStream(intent.data)
+    fun import(name: String, inStream: InputStream) {
         val f = File(getExternalFilesDir(null), name)
 
         if(f.exists()) {
             getFatalDialogBuilder(this)
                     .setMessage(resources.getString(R.string.thing_already_exists, f.name))
-                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> addFile(in_, f) })
+                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> importFile(inStream, f) })
                     .setNegativeButton(android.R.string.cancel, { _, _ -> })
                     .show()
         } else {
-            addFile(in_, f)
+            importFile(inStream, f)
         }
     }
 
-    fun addFile(inStream: InputStream, outFile: File) {
+    private fun importFile(inStream: InputStream, outFile: File) {
         // TODO: config validation
         inStream.use {
             outFile.outputStream().use { out ->
