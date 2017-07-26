@@ -4,9 +4,6 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Notification
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -46,15 +43,12 @@ class ShareActivity : Activity() {
 
         for(res in grantResults) {
             if(res != PackageManager.PERMISSION_GRANTED) {
-                val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                val notif = Notification.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(resources.getString(R.string.unable_to_upload))
-                        .setContentText(resources.getString(R.string.no_storage_permission))
-                        .build()
-                notifManager.notify(0, notif)
-
-                finishAffinity()
+                AlertDialog.Builder(this)
+                        .setTitle(resources.getString(R.string.unable_to_upload))
+                        .setMessage(resources.getString(R.string.no_storage_permission))
+                        .setPositiveButton(android.R.string.ok, { _, _ -> })
+                        .setOnDismissListener { finishAffinity() }
+                        .show()
                 return
             }
         }
