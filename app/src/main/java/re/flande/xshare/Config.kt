@@ -31,6 +31,9 @@ class Config {
         var queryType = charArrayOf()
         var doQuery: ((String) -> String)? = null
 
+        if(URL.isEmpty())
+            return response
+
         for(c in URL.toCharArray()) {
             if(c == '$') {
                 // FIXME (?): would most likely break on $json:asd['$']$
