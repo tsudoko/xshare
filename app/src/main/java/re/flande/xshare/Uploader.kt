@@ -39,6 +39,7 @@ class Uploader : Activity() {
 
         if (uploader == null) {
             Toast.makeText(this, R.string.no_uploader_set, Toast.LENGTH_SHORT).show()
+            finish()
             return
         }
 
