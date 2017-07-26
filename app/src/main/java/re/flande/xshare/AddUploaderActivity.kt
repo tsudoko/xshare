@@ -87,7 +87,7 @@ class AddUploaderActivity : Activity() {
                             File(getExternalFilesDir(null), name).outputStream().use { f ->
                                 f.write(result.value)
                             }
-                            Toast.makeText(this, resources.getString(R.string.added, name), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, resources.getString(R.string.thing_added, name), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

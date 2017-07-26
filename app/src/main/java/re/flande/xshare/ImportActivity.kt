@@ -59,7 +59,7 @@ class ImportActivity : Activity() {
             }
         }
 
-        Toast.makeText(this, resources.getString(R.string.added, outFile.name), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, resources.getString(R.string.thing_added, outFile.name), Toast.LENGTH_SHORT).show()
         finishAffinity()
     }
 }
