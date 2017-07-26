@@ -24,7 +24,7 @@ class AddUploaderActivity : Activity() {
 
         Fuel.get("$GITHUB_APIURL/repos/${resources.getString(R.string.uploaders_repo_owner)}/${resources.getString(R.string.uploaders_repo_name)}/contents/")
                 .header(mapOf("Accept" to "application/vnd.github.v$GITHUB_APIVER+json"))
-                .responseJson { req, res, result ->
+                .responseJson { _, _, result ->
                     findViewById(R.id.progressBar).fadeOut()
 
                     when(result) {
@@ -66,7 +66,7 @@ class AddUploaderActivity : Activity() {
                             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, fileNames)
                             val lv = findViewById(R.id.uploader_list) as ListView
                             lv.adapter = adapter
-                            lv.setOnItemClickListener { parent, view, position, id ->
+                            lv.setOnItemClickListener { _, _, position, _ ->
                                 downloadFile(fileUrls[position])
                             }
                         }
@@ -78,7 +78,7 @@ class AddUploaderActivity : Activity() {
         val name = URLDecoder.decode(addr.split('/').last(), "UTF-8")
 
         Fuel.get(addr)
-                .response { req, res, result ->
+                .response { _, _, result ->
                     when(result) {
                         is Result.Failure -> {
                             Toast.makeText(this, resources.getString(R.string.failed_to_add, name, result.error), Toast.LENGTH_SHORT).show()

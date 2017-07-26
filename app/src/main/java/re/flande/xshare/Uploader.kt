@@ -47,7 +47,6 @@ class Uploader : Activity() {
 
         if (config == null) {
             Toast.makeText(this, resources.getString(R.string.thing_not_found, uploader), Toast.LENGTH_SHORT).show()
-            parent?.setResult(RESULT_OK) ?: setResult(RESULT_OK)
             finish()
             return
         }
@@ -91,8 +90,7 @@ class Uploader : Activity() {
                     // unfortunately this function isn't called when the app is killed, need to find some other way
                     notifManager.cancel(notifID)
                 }
-                .responseString { _, _, result ->
-                    val (d, err) = result
+                .responseString { _, _, (d, err) ->
                     nBuilder.setProgress(0, 0, false)
                             .setOngoing(false)
                             .setSmallIcon(android.R.drawable.stat_sys_upload_done)
@@ -118,7 +116,6 @@ class Uploader : Activity() {
                             clipManager.primaryClip = ClipData.newPlainText("URL", url)
                     }
                 }
-        parent?.setResult(RESULT_OK) ?: setResult(RESULT_OK)
         finish()
     }
 
