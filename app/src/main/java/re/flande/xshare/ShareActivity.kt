@@ -28,7 +28,7 @@ class ShareActivity : Activity() {
                     .setTitle(R.string.unable_to_upload)
                     .setMessage(R.string.no_extra_stream)
                     .setPositiveButton(android.R.string.ok, { _, _ -> })
-                    .setOnDismissListener { finish() }
+                    .setOnDismissListener { finishAffinity() }
                     .show()
             return
         }
