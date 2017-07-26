@@ -3,6 +3,7 @@ package re.flande.xshare
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
@@ -19,8 +20,16 @@ class ShareActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Ideally we would filter out intents without an EXTRA_STREAM in the manifest, but it's
+        // not possible. android.intent.category.OPENABLE is said to prevent receiving intents
+        // without openable streams, but it doesn't work as intended.
         if(!intent.extras.containsKey(Intent.EXTRA_STREAM)) {
-            finish()
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.unable_to_upload)
+                    .setMessage(R.string.no_extra_stream)
+                    .setPositiveButton(android.R.string.ok, { _, _ -> })
+                    .setOnDismissListener { finish() }
+                    .show()
             return
         }
 
