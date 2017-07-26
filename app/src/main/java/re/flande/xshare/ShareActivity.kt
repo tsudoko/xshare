@@ -19,8 +19,10 @@ class ShareActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(!intent.extras.containsKey(Intent.EXTRA_STREAM))
+        if(!intent.extras.containsKey(Intent.EXTRA_STREAM)) {
+            finish()
             return
+        }
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             requestPerms()
