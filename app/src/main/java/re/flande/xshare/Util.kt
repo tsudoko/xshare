@@ -18,9 +18,8 @@ fun getFatalDialogBuilder(context: Activity): AlertDialog.Builder {
 }
 
 fun Uri.getFilename(context: Context): String {
-    if(scheme == "file") {
+    if(scheme == "file")
         return lastPathSegment
-    }
 
     context.contentResolver.query(this, null, null, null, null).use { cursor ->
         if(cursor?.moveToFirst() ?: return@use)

@@ -86,6 +86,7 @@ class ShareActivity : Activity() {
         uris.forEach {
             uploadFile(this, uploader, it)
         }
+
         finishAffinity()
     }
 }
