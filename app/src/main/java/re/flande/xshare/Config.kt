@@ -2,6 +2,8 @@ package re.flande.xshare
 
 import android.util.Log
 import com.jayway.jsonpath.JsonPath
+import org.xml.sax.InputSource
+import javax.xml.xpath.XPathFactory
 
 class Config {
     internal var Name: String? = null
@@ -20,7 +22,7 @@ class Config {
      * "::=" assignments are BNF, "=" are regexps
      *
      * query ::= "$" [type ":"] actual-query "$"
-     * type ::= "json"
+     * type ::= "json" | "xml" | "random"
      * actual-query = [^$]*
      */
     fun prepareUrl(response: String): String {
@@ -47,6 +49,10 @@ class Config {
                     Log.d(TAG, "queryType $qt")
                     if(qt == "json")
                         doQuery = { JsonPath.read(response, it) }
+                    else if(qt == "xml") // untested
+                        doQuery = { XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
+                    else if(qt == "random") // untested
+                        doQuery = { it.split('|').getRandom() }
                     else
                         throw NotImplementedError("query type $qt not implemented")
                 }

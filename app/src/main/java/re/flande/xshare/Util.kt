@@ -1,6 +1,11 @@
 package re.flande.xshare
 
 import android.view.View
+import java.util.*
+
+fun <T> List<T>.getRandom(): T {
+    return get(Random().nextInt(size))
+}
 
 fun View.fade(show: Boolean, duration: Long) {
     animate()
