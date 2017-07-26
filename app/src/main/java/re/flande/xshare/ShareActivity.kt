@@ -77,22 +77,14 @@ class ShareActivity : Activity() {
         if(intent.action == Intent.ACTION_SEND) {
             val fileUri = intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM)
 
-            upload(fileUri, uploader)
+            uploadFile(this, uploader, fileUri)
         } else if(intent.action == Intent.ACTION_SEND_MULTIPLE) {
             val uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
 
             for(u in uris)
-                upload(u, uploader)
+                uploadFile(this, uploader, u)
         }
 
         finishAffinity()
-    }
-
-    fun upload(uri: Uri, uploader: String) {
-        val intent = Intent(this, Uploader::class.java)
-                .putExtra("uploader", uploader)
-                .putExtra("file", uri)
-                .addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION)
-        startActivity(intent)
     }
 }

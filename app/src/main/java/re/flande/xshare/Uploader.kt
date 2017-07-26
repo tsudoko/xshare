@@ -1,6 +1,5 @@
 package re.flande.xshare
 
-import android.app.Activity
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,7 +8,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.provider.OpenableColumns
@@ -22,33 +20,20 @@ import com.google.gson.Gson
 import java.io.File
 import java.io.FileNotFoundException
 
-class Uploader : Activity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+fun uploadFile(context: Context, uploader: String, file: Uri) {
         Log.d(TAG, "uploading")
-        val notifManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val clipManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val notifManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val clipManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         val notifID = (Math.random() * 1000000000.0).toInt() // FIXME: there's a slim possibility of a collision
         Log.d(TAG, "notifID $notifID")
 
-        val uploader = intent.extras.getString("uploader")
-        val file = intent.extras.getParcelable<Uri>("file") ?: throw AssertionError("no file specified")
-
-        if (uploader == null) {
-            Toast.makeText(this, R.string.no_uploader_set, Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
-
-        val blob = blobFromUri(file)
-        val config = getConfig(uploader)
+        val blob = blobFromUri(context, file)
+        val config = getConfig(context, uploader)
 
         if (config == null) {
-            Toast.makeText(this, resources.getString(R.string.thing_not_found, uploader), Toast.LENGTH_SHORT).show()
-            finish()
+            Toast.makeText(context, context.resources.getString(R.string.thing_not_found, uploader), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -56,7 +41,7 @@ class Uploader : Activity() {
         if (!rurl.startsWith("http"))
             rurl = "http://" + rurl
 
-        val nBuilder = Notification.Builder(this)
+        val nBuilder = Notification.Builder(context)
                 .setContentTitle(blob.name)
                 .setProgress(100, 0, true)
                 .setOngoing(true)
@@ -100,13 +85,13 @@ class Uploader : Activity() {
 
                     if (err != null || d == null) {
                         nBuilder.setContentTitle(blob.name)
-                                .setContentText(resources.getString(R.string.upload_failed))
+                                .setContentText(context.resources.getString(R.string.upload_failed))
                                 .setStyle(Notification.BigTextStyle().bigText(err.toString()))
                         notifManager.notify(notifID, nBuilder.build())
                     } else {
                         val url = config.prepareUrl(d)
                         val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                        val intent = PendingIntent.getActivity(this, 0, i, 0)
+                        val intent = PendingIntent.getActivity(context, 0, i, 0)
                         nBuilder.setContentTitle(blob.name)
                                 .setContentText(url)
                                 .setStyle(Notification.BigTextStyle().bigText(url))
@@ -117,27 +102,25 @@ class Uploader : Activity() {
                             clipManager.primaryClip = ClipData.newPlainText("URL", url)
                     }
                 }
-        finish()
     }
 
-    fun blobFromUri(uri: Uri): Blob {
-        contentResolver.query(uri, null, null, null, null).use { cursor ->
+    private fun blobFromUri(context: Context, uri: Uri): Blob {
+        context.contentResolver.query(uri, null, null, null, null).use { cursor ->
             cursor.moveToFirst()
             val name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
 
-            contentResolver.openFileDescriptor(uri, "r").use { fd ->
-                return Blob(name, fd.statSize, { contentResolver.openInputStream(uri) })
+            context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
+                return Blob(name, fd.statSize, { context.contentResolver.openInputStream(uri) })
             }
         }
     }
 
-    fun getConfig(uploader: String): Config? {
+    private fun getConfig(context: Context, uploader: String): Config? {
         try {
-            File(getExternalFilesDir(null), uploader).inputStream().use {
+            File(context.getExternalFilesDir(null), uploader).inputStream().use {
                 return Gson().fromJson(it.reader(), Config::class.java)
             }
         } catch(e: FileNotFoundException) {
             return null
         }
     }
-}
