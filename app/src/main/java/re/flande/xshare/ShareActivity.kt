@@ -14,6 +14,8 @@ import android.preference.PreferenceManager
 class ShareActivity : Activity() {
     val REQUESTPERMS_CODE = 0
 
+    var uploadCallback: () -> Unit = { throw AssertionError("no upload callback") }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,10 +32,30 @@ class ShareActivity : Activity() {
             return
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val uploader = prefs.getString("uploader", null)
+        val uris: Iterable<Uri>
+
+        if(intent.action == Intent.ACTION_SEND) {
+            uris = arrayListOf(intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM))
+        } else if(intent.action == Intent.ACTION_SEND_MULTIPLE) {
+            uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
+        } else {
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.unable_to_upload)
+                    .setMessage(resources.getString(R.string.intent_action_not_supported, intent.action))
+                    .setPositiveButton(android.R.string.ok, { _, _ -> })
+                    .setOnDismissListener { finishAffinity() }
+                    .show()
+            return
+        }
+
+        uploadCallback = { doUploads(uploader, uris) }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && uris.any { it.scheme == "file" })
             requestPerms()
         else
-            doUploads()
+            doUploads(uploader, uris)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?, grantResults: IntArray?) {
@@ -53,7 +75,7 @@ class ShareActivity : Activity() {
             }
         }
 
-        doUploads()
+        uploadCallback()
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -61,24 +83,13 @@ class ShareActivity : Activity() {
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUESTPERMS_CODE)
         else
-            doUploads()
+            uploadCallback()
     }
 
-    fun doUploads() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val uploader = prefs.getString("uploader", null)
-
-        if(intent.action == Intent.ACTION_SEND) {
-            val fileUri = intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM)
-
-            uploadFile(this, uploader, fileUri)
-        } else if(intent.action == Intent.ACTION_SEND_MULTIPLE) {
-            val uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
-
-            for(u in uris)
-                uploadFile(this, uploader, u)
+    fun doUploads(uploader: String, uris: Iterable<Uri>) {
+        uris.forEach {
+            uploadFile(this, uploader, it)
         }
-
         finishAffinity()
     }
 }
