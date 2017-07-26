@@ -2,9 +2,7 @@ package re.flande.xshare
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import java.io.File
@@ -15,7 +13,7 @@ class ImportActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val name = getFilename(intent.data)
+        val name = intent.data.getFilename(this)
         Log.d(TAG, "contentresolver name $name")
 
         if(name.split('.').last() != "sxcu") {
@@ -26,13 +24,6 @@ class ImportActivity : Activity() {
                     .show()
         } else {
             import(name)
-        }
-    }
-
-    fun getFilename(uri: Uri): String {
-        contentResolver.query(uri, null, null, null, null).use {
-            it.moveToFirst()
-            return it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
         }
     }
 

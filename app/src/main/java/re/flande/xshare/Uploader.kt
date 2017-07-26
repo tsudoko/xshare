@@ -10,7 +10,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.SystemClock
 import android.preference.PreferenceManager
-import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
@@ -106,13 +105,9 @@ fun uploadFile(context: Context, uploader: String, file: Uri) {
 
 private fun blobFromUri(context: Context, uri: Uri): Blob {
     context.grantUriPermission(context.packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    context.contentResolver.query(uri, null, null, null, null).use { cursor ->
-        cursor.moveToFirst()
-        val name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-
-        context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
-            return Blob(name, fd.statSize, { context.contentResolver.openInputStream(uri) })
-        }
+    val name = uri.getFilename(context)
+    context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
+        return Blob(name, fd.statSize, { context.contentResolver.openInputStream(uri) })
     }
 }
 

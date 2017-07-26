@@ -1,10 +1,26 @@
 package re.flande.xshare
 
+import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.view.View
 import java.util.*
 
 fun <T> List<T>.getRandom(): T {
     return get(Random().nextInt(size))
+}
+
+fun Uri.getFilename(context: Context): String {
+    if(scheme == "file") {
+        return lastPathSegment
+    }
+
+    context.contentResolver.query(this, null, null, null, null).use { cursor ->
+        if(cursor?.moveToFirst() ?: return@use)
+            return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+    }
+
+    throw Exception("don't know how to get file name from $this")
 }
 
 fun View.fade(show: Boolean, duration: Long) {
