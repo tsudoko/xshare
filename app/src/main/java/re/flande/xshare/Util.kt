@@ -1,5 +1,7 @@
 package re.flande.xshare
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -8,6 +10,11 @@ import java.util.*
 
 fun <T> List<T>.getRandom(): T {
     return get(Random().nextInt(size))
+}
+
+fun getFatalDialogBuilder(context: Activity): AlertDialog.Builder {
+    return AlertDialog.Builder(context)
+            .setOnDismissListener { context.finishAffinity() }
 }
 
 fun Uri.getFilename(context: Context): String {

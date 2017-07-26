@@ -3,7 +3,6 @@ package re.flande.xshare
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -23,11 +22,10 @@ class ShareActivity : Activity() {
         // not possible. android.intent.category.OPENABLE is said to prevent receiving intents
         // without openable streams, but it doesn't work as intended.
         if(!intent.extras.containsKey(Intent.EXTRA_STREAM)) {
-            AlertDialog.Builder(this)
+            getFatalDialogBuilder(this)
                     .setTitle(R.string.unable_to_upload)
                     .setMessage(R.string.no_extra_stream)
                     .setPositiveButton(android.R.string.ok, { _, _ -> })
-                    .setOnDismissListener { finishAffinity() }
                     .show()
             return
         }
@@ -41,11 +39,10 @@ class ShareActivity : Activity() {
         } else if(intent.action == Intent.ACTION_SEND_MULTIPLE) {
             uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
         } else {
-            AlertDialog.Builder(this)
+            getFatalDialogBuilder(this)
                     .setTitle(R.string.unable_to_upload)
                     .setMessage(resources.getString(R.string.intent_action_not_supported, intent.action))
                     .setPositiveButton(android.R.string.ok, { _, _ -> })
-                    .setOnDismissListener { finishAffinity() }
                     .show()
             return
         }
@@ -65,11 +62,10 @@ class ShareActivity : Activity() {
 
         for(res in grantResults) {
             if(res != PackageManager.PERMISSION_GRANTED) {
-                AlertDialog.Builder(this)
+                getFatalDialogBuilder(this)
                         .setTitle(resources.getString(R.string.unable_to_upload))
                         .setMessage(resources.getString(R.string.no_storage_permission))
                         .setPositiveButton(android.R.string.ok, { _, _ -> })
-                        .setOnDismissListener { finishAffinity() }
                         .show()
                 return
             }

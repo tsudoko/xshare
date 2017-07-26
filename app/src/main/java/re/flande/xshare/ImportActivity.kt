@@ -1,7 +1,6 @@
 package re.flande.xshare
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -17,10 +16,10 @@ class ImportActivity : Activity() {
         Log.d(TAG, "contentresolver name $name")
 
         if(name.split('.').last() != "sxcu") {
-            AlertDialog.Builder(this)
+            getFatalDialogBuilder(this)
                     .setMessage(R.string.file_not_sxcu)
                     .setPositiveButton(R.string.proceed_anyway, { _, _ -> import(name + ".sxcu") })
-                    .setNegativeButton(android.R.string.cancel, { _, _ -> finish() })
+                    .setNegativeButton(android.R.string.cancel, { _, _ -> })
                     .show()
         } else {
             import(name)
@@ -32,10 +31,10 @@ class ImportActivity : Activity() {
         val f = File(getExternalFilesDir(null), name)
 
         if(f.exists()) {
-            AlertDialog.Builder(this)
+            getFatalDialogBuilder(this)
                     .setMessage(resources.getString(R.string.thing_already_exists, f.name))
                     .setPositiveButton(R.string.proceed_anyway, { _, _ -> addFile(in_, f) })
-                    .setNegativeButton(android.R.string.cancel, { _, _ -> finish() })
+                    .setNegativeButton(android.R.string.cancel, { _, _ -> })
                     .show()
         } else {
             addFile(in_, f)
