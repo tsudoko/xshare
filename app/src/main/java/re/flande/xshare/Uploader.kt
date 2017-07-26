@@ -105,6 +105,7 @@ fun uploadFile(context: Context, uploader: String, file: Uri) {
 }
 
 private fun blobFromUri(context: Context, uri: Uri): Blob {
+    context.grantUriPermission(context.packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
     context.contentResolver.query(uri, null, null, null, null).use { cursor ->
         cursor.moveToFirst()
         val name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
