@@ -25,8 +25,8 @@ class Config {
      */
     fun prepareUrl(response: String): String {
         val rawResult = StringBuilder()
-        var insideDollar = false
-        var afterColon = false
+        var insideQuery = false
+        var afterType = false
         var query = charArrayOf()
         var queryType = charArrayOf()
         var doQuery: ((String) -> String)? = null
@@ -37,9 +37,9 @@ class Config {
         for(c in URL.toCharArray()) {
             if(c == '$') {
                 // FIXME (?): would most likely break on $json:asd['$']$
-                insideDollar = !insideDollar
+                insideQuery = !insideQuery
 
-                if(!afterColon)
+                if(!afterType)
                     query = queryType
 
                 if(queryType.isNotEmpty()) {
@@ -62,18 +62,18 @@ class Config {
                 query = charArrayOf()
                 queryType = charArrayOf()
                 doQuery = null
-                afterColon = false
+                afterType = false
 
                 continue
             }
 
-            if(insideDollar) {
-                if(c == ':' && !afterColon) {
-                    afterColon = true
+            if(insideQuery) {
+                if(c == ':' && !afterType) {
+                    afterType = true
                     continue
                 }
 
-                if(afterColon)
+                if(afterType)
                     query += c
                 else
                     queryType += c
