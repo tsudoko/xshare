@@ -5,4 +5,13 @@
 		<!-- Customize your theme here. -->
 	</style>
 
+	<!-- @android:style/Theme.Translucent.NoTitleBar makes dialogs look like on android 2.x -->
+	<style name="Theme.DeviceDefault.Translucent.NoTitleBar" parent="android:Theme.DeviceDefault">
+		<item name="android:windowIsTranslucent">true</item>
+		<item name="android:windowBackground">@android:color/transparent</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowIsFloating">true</item>
+	</style>
+
 </resources>

@@ -26,7 +26,7 @@
 			android:theme="@android:style/Theme.NoDisplay" />
 		<activity
 			android:name=".ShareActivity"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+			android:theme="@style/Theme.DeviceDefault.Translucent.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.SEND" />
 				<action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -39,7 +39,7 @@
 		</activity>
 		<activity
 			android:name=".ImportActivity"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+			android:theme="@style/Theme.DeviceDefault.Translucent.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 
