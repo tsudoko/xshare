@@ -2,13 +2,13 @@ package re.flande.xshare
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import java.io.File
+import java.io.InputStream
 
 class ImportActivity : Activity() {
 
@@ -37,15 +37,29 @@ class ImportActivity : Activity() {
     }
 
     fun import(name: String) {
-        val pd = ProgressDialog.show(this, "", resources.getString(R.string.importing))
-        contentResolver.openInputStream(intent.data).use { in_ ->
-            File(getExternalFilesDir(null), name).outputStream().use { out ->
-                in_.copyTo(out)
+        val in_ = contentResolver.openInputStream(intent.data)
+        val f = File(getExternalFilesDir(null), name)
+
+        if(f.exists()) {
+            AlertDialog.Builder(this)
+                    .setMessage(resources.getString(R.string.thing_already_exists, f.name))
+                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> addFile(in_, f) })
+                    .setNegativeButton(android.R.string.cancel, { _, _ -> finish() })
+                    .show()
+        } else {
+            addFile(in_, f)
+        }
+    }
+
+    fun addFile(inStream: InputStream, outFile: File) {
+        // TODO: config validation
+        inStream.use {
+            outFile.outputStream().use { out ->
+                inStream.copyTo(out)
             }
         }
-        // TODO: config validation
-        pd.cancel()
-        Toast.makeText(this, resources.getString(R.string.added, name), Toast.LENGTH_SHORT).show()
+
+        Toast.makeText(this, resources.getString(R.string.added, outFile.name), Toast.LENGTH_SHORT).show()
         finishAffinity()
     }
 }
