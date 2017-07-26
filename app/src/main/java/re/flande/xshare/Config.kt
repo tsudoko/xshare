@@ -39,7 +39,6 @@ class Config {
 
         for(c in URL.toCharArray()) {
             if(c == '$') {
-                // FIXME (?): would most likely break on $json:asd['$']$
                 insideQuery = !insideQuery
 
                 if(!afterType)
