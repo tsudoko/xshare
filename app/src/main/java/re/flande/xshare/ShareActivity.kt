@@ -9,6 +9,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
+import java.io.File
 
 class ShareActivity : Activity() {
     val REQUESTPERMS_CODE = 0
@@ -47,12 +49,25 @@ class ShareActivity : Activity() {
             return
         }
 
-        uploadCallback = { doUploads(uploader, uris) }
+        if (uploader != null) {
+            uploadCallback = { doUploads(uploader, uris) }
+        } else {
+            Log.d(TAG, "no default uploader set, using $DEFAULT_UPLOADER_FILENAME")
+
+            File(getExternalFilesDir(null), DEFAULT_UPLOADER_FILENAME).outputStream().use { out ->
+                resources.openRawResource(DEFAULT_UPLOADER_RESOURCE).use {
+                    it.copyTo(out)
+                }
+            }
+
+            prefs.edit().putString("uploader", DEFAULT_UPLOADER_FILENAME).apply()
+            uploadCallback = { doUploads(DEFAULT_UPLOADER_FILENAME, uris) }
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && uris.any { it.scheme == "file" })
             requestPerms()
         else
-            doUploads(uploader, uris)
+            uploadCallback()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?, grantResults: IntArray?) {

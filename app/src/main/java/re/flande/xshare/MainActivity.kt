@@ -15,7 +15,6 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
-import java.io.File
 
 class MainActivity : Activity() {
 
@@ -54,16 +53,6 @@ class MainActivity : Activity() {
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         updateInfo(prefs)
-
-        val installSampleButton = findViewById(R.id.button) as Button
-        installSampleButton.setOnClickListener {
-            File(getExternalFilesDir(null), "uguu.se.sxcu").outputStream().use { out ->
-                resources.openRawResource(R.raw.uguu).use {
-                    it.copyTo(out)
-                }
-            }
-            updateInfo(prefs)
-        }
 
         val changeDefaultButton = findViewById(R.id.button2) as Button
         changeDefaultButton.setOnClickListener {
