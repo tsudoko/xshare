@@ -27,6 +27,7 @@ fun uploadFile(context: Context, uploaderName: String, file: Uri) {
 
     val notifID = (Math.random() * 1000000000.0).toInt() // FIXME: there's a slim possibility of a collision
     Log.d(TAG, "notifID $notifID")
+    Log.d(TAG, "authority ${file.authority} uri $file")
 
     val blob = blobFromUri(context, file)
     val uploader = getUploader(context, uploaderName)
@@ -54,7 +55,7 @@ fun uploadFile(context: Context, uploaderName: String, file: Uri) {
             .name { uploader.FileFormName }
             .blob { _, _ -> blob }
             .progress { read, total ->
-                //Log.d(TAG, "read $read total $total")
+                //Log.v(TAG, "read $read total $total")
                 // .progress gets called once with read=$total, total=0 before resolving the hostname for reasons unknown to me
                 if (total == 0L)
                     return@progress
@@ -72,7 +73,7 @@ fun uploadFile(context: Context, uploaderName: String, file: Uri) {
                 notifManager.notify(notifID, nBuilder.build())
             }
             .interrupt {
-                // unfortunately this function isn't called when the app is killed, need to find some other way
+                // unfortunately this function isn't called when the app gets killed, need to find some other way
                 notifManager.cancel(notifID)
             }
             .responseString { _, _, (d, err) ->
@@ -80,26 +81,23 @@ fun uploadFile(context: Context, uploaderName: String, file: Uri) {
                         .setOngoing(false)
                         .setSmallIcon(android.R.drawable.stat_sys_upload_done)
                 notifManager.cancel(notifID)
-                val notifID = notifID + 1 // FIXME collisions
 
                 if (err != null || d == null) {
-                    nBuilder.setContentTitle(blob.name)
-                            .setContentText(context.resources.getString(R.string.upload_failed))
+                    nBuilder.setContentText(context.resources.getString(R.string.upload_failed))
                             .setStyle(Notification.BigTextStyle().bigText(err.toString()))
-                    notifManager.notify(notifID, nBuilder.build())
                 } else {
                     val url = uploader.prepareUrl(d)
                     val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     val intent = PendingIntent.getActivity(context, 0, i, 0)
-                    nBuilder.setContentTitle(blob.name)
-                            .setContentText(url)
+                    nBuilder.setContentText(url)
                             .setStyle(Notification.BigTextStyle().bigText(url))
                             .setContentIntent(intent)
-                    notifManager.notify(notifID, nBuilder.build())
 
                     if (prefs.getBoolean("autoclip", false))
                         clipManager.primaryClip = ClipData.newPlainText("URL", url)
                 }
+
+                notifManager.notify(notifID, nBuilder.build())
             }
 }
 

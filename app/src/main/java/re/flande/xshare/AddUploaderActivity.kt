@@ -60,7 +60,7 @@ class AddUploaderActivity : Activity() {
                                 fileNames.add(file.getString("name").removeSuffix(".sxcu"))
                                 fileUrls.add(file.getString("download_url"))
 
-                                Log.d("Xshare", "host ${file.getString("name")}, url ${file.getString("download_url")}")
+                                Log.v(TAG, "host ${file.getString("name")}, url ${file.getString("download_url")}")
                             }
 
                             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, fileNames)
