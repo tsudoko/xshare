@@ -9,7 +9,7 @@ android {
 		minSdkVersion 19
 		targetSdkVersion 25
 		versionCode 1
-		versionName "0.1"
+		versionName git_app_version
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	buildTypes {
