@@ -45,16 +45,12 @@ class Uploader {
                     query = queryType
 
                 if (queryType.isNotEmpty()) {
-                    val qt = String(queryType)
-                    Log.d(TAG, "queryType $qt")
-                    if (qt == "json")
-                        doQuery = { JsonPath.read(response, it) }
-                    else if (qt == "xml") // untested
-                        doQuery = { XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
-                    else if (qt == "random") // untested
-                        doQuery = { it.split('|').getRandom() }
-                    else
-                        throw NotImplementedError("query type $qt not implemented")
+                    when (String(queryType)) {
+                        "json" -> doQuery = { JsonPath.read(response, it) }
+                        "xml" -> doQuery = { XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
+                        "random" -> doQuery = { it.split('|').getRandom() }
+                        else -> throw NotImplementedError("query type ${String(queryType)} not implemented")
+                    }
                 }
 
                 if (query.isNotEmpty()) {
