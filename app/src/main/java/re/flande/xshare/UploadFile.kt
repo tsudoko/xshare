@@ -19,7 +19,7 @@ import com.google.gson.Gson
 import java.io.File
 import java.io.FileNotFoundException
 
-fun uploadFile(context: Context, uploader: String, file: Uri) {
+fun uploadFile(context: Context, uploaderName: String, file: Uri) {
     Log.d(TAG, "uploading")
     val notifManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val clipManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -29,14 +29,14 @@ fun uploadFile(context: Context, uploader: String, file: Uri) {
     Log.d(TAG, "notifID $notifID")
 
     val blob = blobFromUri(context, file)
-    val config = getConfig(context, uploader)
+    val uploader = getUploader(context, uploaderName)
 
-    if (config == null) {
-        Toast.makeText(context, context.resources.getString(R.string.thing_not_found, uploader), Toast.LENGTH_SHORT).show()
+    if (uploader == null) {
+        Toast.makeText(context, context.resources.getString(R.string.thing_not_found, uploaderName), Toast.LENGTH_SHORT).show()
         return
     }
 
-    var rurl = config.RequestURL ?: throw Exception("no uploader url specified")
+    var rurl = uploader.RequestURL ?: throw Exception("no uploader url specified")
     if (!rurl.startsWith("http"))
         rurl = "http://" + rurl
 
@@ -49,9 +49,9 @@ fun uploadFile(context: Context, uploader: String, file: Uri) {
 
     var time = SystemClock.uptimeMillis()
 
-    Fuel.upload(rurl, Method.valueOf(config.RequestType ?: "POST"), config.Arguments?.toList())
-            .header(config.Headers)
-            .name { config.FileFormName }
+    Fuel.upload(rurl, Method.valueOf(uploader.RequestType ?: "POST"), uploader.Arguments?.toList())
+            .header(uploader.Headers)
+            .name { uploader.FileFormName }
             .blob { _, _ -> blob }
             .progress { read, total ->
                 //Log.d(TAG, "read $read total $total")
@@ -88,7 +88,7 @@ fun uploadFile(context: Context, uploader: String, file: Uri) {
                             .setStyle(Notification.BigTextStyle().bigText(err.toString()))
                     notifManager.notify(notifID, nBuilder.build())
                 } else {
-                    val url = config.prepareUrl(d)
+                    val url = uploader.prepareUrl(d)
                     val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     val intent = PendingIntent.getActivity(context, 0, i, 0)
                     nBuilder.setContentTitle(blob.name)
@@ -111,10 +111,10 @@ private fun blobFromUri(context: Context, uri: Uri): Blob {
     }
 }
 
-private fun getConfig(context: Context, uploader: String): Config? {
+private fun getUploader(context: Context, name: String): Uploader? {
     try {
-        File(context.getExternalFilesDir(null), uploader).inputStream().use {
-            return Gson().fromJson(it.reader(), Config::class.java)
+        File(context.getExternalFilesDir(null), name).inputStream().use {
+            return Gson().fromJson(it.reader(), Uploader::class.java)
         }
     } catch(e: FileNotFoundException) {
         return null
