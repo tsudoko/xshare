@@ -104,32 +104,30 @@ class MainActivity : Activity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         item ?: return false
 
-        if (item.itemId == R.id.action_add)
-            startActivity(Intent(this, AddUploaderActivity::class.java))
-        if (item.itemId == R.id.action_opendir) {
-            val intent = Intent(Intent.ACTION_VIEW)
-            val uri = Uri.fromFile(getExternalFilesDir(null))
-            var unmatched = 0
-            val mimeTypes = arrayOf(
-                    "resource/folder",
-                    "vnd.android.document/directory",
-                    "vnd.android.cursor.item/file",
-                    "inode/directory",
-                    "x-directory/normal"
-            )
+        itemSelect@ when (item.itemId) {
+            R.id.action_add ->
+                startActivity(Intent(this, AddUploaderActivity::class.java))
+            R.id.action_opendir -> {
+                val intent = Intent(Intent.ACTION_VIEW)
+                val uri = Uri.fromFile(getExternalFilesDir(null))
+                val mimeTypes = arrayOf(
+                        "resource/folder",
+                        "vnd.android.document/directory",
+                        "vnd.android.cursor.item/file",
+                        "inode/directory",
+                        "x-directory/normal"
+                )
 
-            for (type in mimeTypes) {
-                intent.setDataAndType(uri, type)
-                try {
-                    startActivity(intent)
-                    Log.d(TAG, "matching directory type: $type")
-                    break
-                } catch(e: ActivityNotFoundException) {
-                    unmatched++
+                for (type in mimeTypes) {
+                    intent.setDataAndType(uri, type)
+                    try {
+                        startActivity(intent)
+                        Log.d(TAG, "matching directory type: $type")
+                        return@itemSelect
+                    } catch(e: ActivityNotFoundException) {
+                    }
                 }
-            }
 
-            if(unmatched == mimeTypes.size) {
                 AlertDialog.Builder(this)
                         .setMessage(resources.getString(R.string.no_file_managers, uri.path))
                         .setPositiveButton(android.R.string.ok, { _, _ -> })
