@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.Html
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -108,10 +109,27 @@ class MainActivity : Activity() {
         if (item.itemId == R.id.action_opendir) {
             val intent = Intent(Intent.ACTION_VIEW)
             val uri = Uri.fromFile(getExternalFilesDir(null))
-            intent.setDataAndType(uri, "resource/folder")
-            try {
-                startActivity(intent)
-            } catch(e: ActivityNotFoundException) {
+            var unmatched = 0
+            val mimeTypes = arrayOf(
+                    "resource/folder",
+                    "vnd.android.document/directory",
+                    "vnd.android.cursor.item/file",
+                    "inode/directory",
+                    "x-directory/normal"
+            )
+
+            for (type in mimeTypes) {
+                intent.setDataAndType(uri, type)
+                try {
+                    startActivity(intent)
+                    Log.d(TAG, "matching directory type: $type")
+                    break
+                } catch(e: ActivityNotFoundException) {
+                    unmatched++
+                }
+            }
+
+            if(unmatched == mimeTypes.size) {
                 AlertDialog.Builder(this)
                         .setMessage(resources.getString(R.string.no_file_managers, uri.path))
                         .setPositiveButton(android.R.string.ok, { _, _ -> })
