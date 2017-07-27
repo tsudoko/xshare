@@ -12,6 +12,7 @@ import android.text.Html
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
@@ -56,24 +57,17 @@ class MainActivity : Activity() {
 
         val changeDefaultButton = findViewById(R.id.button2) as Button
         changeDefaultButton.setOnClickListener {
-            val current = prefs.getString("uploader", null)
-            val files = getExternalFilesDir(null).listFiles()
-            var new = current
+            val files = getExternalFilesDir(null).listFiles().map({ it.name.removeSuffix(".sxcu") })
+            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, files)
 
-            for (i in files.indices) {
-                if (i == files.count() - 1) {
-                    new = files[0].name
-                    break
-                } else if (files[i].name == current) {
-                    new = files[i + 1].name
-                    break
-                }
-            }
-
-            val editor = prefs.edit()
-            editor?.putString("uploader", new)
-            editor?.commit()
-            updateInfo(prefs)
+            AlertDialog.Builder(this)
+                    .setAdapter(adapter, { _, i ->
+                        val editor = prefs.edit()
+                        editor?.putString("uploader", files[i] + ".sxcu")
+                        editor?.commit()
+                        updateInfo(prefs)
+                    })
+                    .show()
         }
 
         val autoclipSwitch = findViewById(R.id.switchAutoclip) as Switch
