@@ -27,7 +27,7 @@ class AddUploaderActivity : Activity() {
                 .responseJson { _, _, result ->
                     findViewById(R.id.progressBar).fadeOut()
 
-                    when(result) {
+                    when (result) {
                         is Result.Failure -> {
                             val layout = findViewById(R.id.addUploaderLayout)
                             val lv = findViewById(R.id.uploader_list) as ListView
@@ -51,10 +51,10 @@ class AddUploaderActivity : Activity() {
                             val fileNames = ArrayList<String>()
                             val fileUrls = ArrayList<String>()
 
-                            for(i in 0..(data.length() - 1)) {
+                            for (i in 0..(data.length() - 1)) {
                                 val file = data.getJSONObject(i)
 
-                                if(!file.getString("name").endsWith(".sxcu"))
+                                if (!file.getString("name").endsWith(".sxcu"))
                                     continue
 
                                 fileNames.add(file.getString("name").removeSuffix(".sxcu"))
@@ -79,7 +79,7 @@ class AddUploaderActivity : Activity() {
 
         Fuel.get(addr)
                 .response { _, _, result ->
-                    when(result) {
+                    when (result) {
                         is Result.Failure -> {
                             Toast.makeText(this, resources.getString(R.string.failed_to_add, name, result.error), Toast.LENGTH_SHORT).show()
                         }

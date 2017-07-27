@@ -37,10 +37,10 @@ class MainActivity : Activity() {
         sb.append(resources.getString(R.string.uploaders))
 
         val files = getExternalFilesDir(null).listFiles()
-        for(i in files.indices) {
+        for (i in files.indices) {
             sb.append(files[i].name.removeSuffix(".sxcu"))
 
-            if(i < files.count() - 1)
+            if (i < files.count() - 1)
                 sb.append(", ")
         }
 
@@ -70,12 +70,12 @@ class MainActivity : Activity() {
             val files = getExternalFilesDir(null).listFiles()
             var new = current
 
-            for(i in files.indices) {
-                if(i == files.count() - 1) {
+            for (i in files.indices) {
+                if (i == files.count() - 1) {
                     new = files[0].name
                     break
-                } else if(files[i].name == current) {
-                    new = files[i+1].name
+                } else if (files[i].name == current) {
+                    new = files[i + 1].name
                     break
                 }
             }
@@ -103,9 +103,9 @@ class MainActivity : Activity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         item ?: return false
 
-        if(item.itemId == R.id.action_add)
+        if (item.itemId == R.id.action_add)
             startActivity(Intent(this, AddUploaderActivity::class.java))
-        if(item.itemId == R.id.action_opendir) {
+        if (item.itemId == R.id.action_opendir) {
             val intent = Intent(Intent.ACTION_VIEW)
             val uri = Uri.fromFile(getExternalFilesDir(null))
             intent.setDataAndType(uri, "resource/folder")
@@ -114,7 +114,7 @@ class MainActivity : Activity() {
             } catch(e: ActivityNotFoundException) {
                 AlertDialog.Builder(this)
                         .setMessage(resources.getString(R.string.no_file_managers, uri.path))
-                        .setPositiveButton(android.R.string.ok, {_, _ ->})
+                        .setPositiveButton(android.R.string.ok, { _, _ -> })
                         .show()
             }
         }

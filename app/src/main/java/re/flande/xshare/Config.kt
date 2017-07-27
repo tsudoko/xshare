@@ -34,31 +34,31 @@ class Config {
         var queryType = charArrayOf()
         var doQuery: ((String) -> String)? = null
 
-        if(URL.isEmpty())
+        if (URL.isEmpty())
             return response
 
-        for(c in URL.toCharArray()) {
-            if(c == '$') {
+        for (c in URL.toCharArray()) {
+            if (c == '$') {
                 insideQuery = !insideQuery
 
-                if(!afterType)
+                if (!afterType)
                     query = queryType
 
-                if(queryType.isNotEmpty()) {
+                if (queryType.isNotEmpty()) {
                     val qt = String(queryType)
                     Log.d(TAG, "queryType $qt")
-                    if(qt == "json")
+                    if (qt == "json")
                         doQuery = { JsonPath.read(response, it) }
-                    else if(qt == "xml") // untested
+                    else if (qt == "xml") // untested
                         doQuery = { XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
-                    else if(qt == "random") // untested
+                    else if (qt == "random") // untested
                         doQuery = { it.split('|').getRandom() }
                     else
                         throw NotImplementedError("query type $qt not implemented")
                 }
 
-                if(query.isNotEmpty()) {
-                    if(doQuery == null)
+                if (query.isNotEmpty()) {
+                    if (doQuery == null)
                         throw AssertionError("no query handler to execute $query")
 
                     Log.d(TAG, "query ${String(query)}")
@@ -73,13 +73,13 @@ class Config {
                 continue
             }
 
-            if(insideQuery) {
-                if(c == ':' && !afterType) {
+            if (insideQuery) {
+                if (c == ':' && !afterType) {
                     afterType = true
                     continue
                 }
 
-                if(afterType)
+                if (afterType)
                     query += c
                 else
                     queryType += c

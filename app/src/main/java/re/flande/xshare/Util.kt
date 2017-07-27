@@ -18,11 +18,11 @@ fun getFatalDialogBuilder(context: Activity): AlertDialog.Builder {
 }
 
 fun Uri.getFilename(context: Context): String {
-    if(scheme == "file")
+    if (scheme == "file")
         return lastPathSegment
 
     context.contentResolver.query(this, null, null, null, null).use { cursor ->
-        if(cursor?.moveToFirst() ?: return@use)
+        if (cursor?.moveToFirst() ?: return@use)
             return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
     }
 
@@ -32,8 +32,8 @@ fun Uri.getFilename(context: Context): String {
 fun View.fade(show: Boolean, duration: Long) {
     animate()
             .setDuration(duration)
-            .alpha(if(show) 1F else 0F)
-            .withEndAction { visibility = if(show) View.VISIBLE else View.GONE }
+            .alpha(if (show) 1F else 0F)
+            .withEndAction { visibility = if (show) View.VISIBLE else View.GONE }
 }
 
 fun View.fadeIn(duration: Long = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()) {

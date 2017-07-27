@@ -1,40 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  xmlns:tools="http://schemas.android.com/tools"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent"
-			  android:layout_gravity="center"
-			  android:orientation="vertical">
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_gravity="center"
+				android:orientation="vertical">
 
 	<TextView
 		android:id="@+id/somethingHappened"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/something_happened"
-		android:textSize="25sp"
-		android:layout_alignParentTop="true"
 		android:layout_alignParentStart="true"
-		android:layout_marginStart="20dp"
+		android:layout_alignParentTop="true"
 		android:layout_marginEnd="20dp"
-		android:layout_marginTop="20dp" />
+		android:layout_marginStart="20dp"
+		android:layout_marginTop="20dp"
+		android:text="@string/something_happened"
+		android:textSize="25sp" />
 
 	<TextView
 		android:id="@+id/errorText"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/something_happened"
 		android:layout_below="@+id/somethingHappened"
 		android:layout_centerHorizontal="true"
+		android:layout_marginStart="80dp"
 		android:layout_marginTop="10dp"
-		android:layout_marginStart="80dp" />
+		android:text="@string/something_happened" />
 
 	<Button
 		android:id="@+id/tryAgain"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/try_again"
-		android:layout_below="@+id/errorText"
 		android:layout_alignEnd="@+id/errorText"
-		android:layout_marginTop="30dp" />
+		android:layout_below="@+id/errorText"
+		android:layout_marginTop="30dp"
+		android:text="@string/try_again" />
 
 </RelativeLayout>

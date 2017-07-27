@@ -21,7 +21,7 @@ class ShareActivity : Activity() {
         // Ideally we would filter out intents without an EXTRA_STREAM in the manifest, but it's
         // not possible. android.intent.category.OPENABLE is said to prevent receiving intents
         // without openable streams, but it doesn't work as intended.
-        if(!intent.extras.containsKey(Intent.EXTRA_STREAM)) {
+        if (!intent.extras.containsKey(Intent.EXTRA_STREAM)) {
             getFatalDialogBuilder(this)
                     .setTitle(R.string.unable_to_upload)
                     .setMessage(R.string.no_extra_stream)
@@ -34,9 +34,9 @@ class ShareActivity : Activity() {
         val uploader = prefs.getString("uploader", null)
         val uris: Iterable<Uri>
 
-        if(intent.action == Intent.ACTION_SEND) {
+        if (intent.action == Intent.ACTION_SEND) {
             uris = arrayListOf(intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM))
-        } else if(intent.action == Intent.ACTION_SEND_MULTIPLE) {
+        } else if (intent.action == Intent.ACTION_SEND_MULTIPLE) {
             uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
         } else {
             getFatalDialogBuilder(this)
@@ -49,7 +49,7 @@ class ShareActivity : Activity() {
 
         uploadCallback = { doUploads(uploader, uris) }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && uris.any { it.scheme == "file" })
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && uris.any { it.scheme == "file" })
             requestPerms()
         else
             doUploads(uploader, uris)
@@ -60,8 +60,8 @@ class ShareActivity : Activity() {
 
         grantResults ?: return
 
-        for(res in grantResults) {
-            if(res != PackageManager.PERMISSION_GRANTED) {
+        for (res in grantResults) {
+            if (res != PackageManager.PERMISSION_GRANTED) {
                 getFatalDialogBuilder(this)
                         .setTitle(resources.getString(R.string.unable_to_upload))
                         .setMessage(resources.getString(R.string.no_storage_permission))
@@ -76,7 +76,7 @@ class ShareActivity : Activity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     fun requestPerms() {
-        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUESTPERMS_CODE)
         else
             uploadCallback()
