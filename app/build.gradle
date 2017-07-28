@@ -8,7 +8,7 @@ android {
 		applicationId "re.flande.xshare"
 		minSdkVersion 19
 		targetSdkVersion 25
-		versionCode 1
+		versionCode 2
 		versionName git_app_version
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
