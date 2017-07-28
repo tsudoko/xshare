@@ -22,9 +22,9 @@ class Uploader {
 
     fun validate() {
         if(RequestURL.isNullOrEmpty())
-            throw IllegalStateException("RequestURL")
+            throw EmptyFieldException("RequestURL")
         if(FileFormName.isNullOrEmpty())
-            throw IllegalStateException("FileFormName")
+            throw EmptyFieldException("FileFormName")
     }
 
     /*
