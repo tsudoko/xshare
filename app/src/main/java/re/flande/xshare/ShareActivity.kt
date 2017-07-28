@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import com.google.gson.Gson
 import java.io.File
 
 class ShareActivity : Activity() {
@@ -36,7 +38,7 @@ class ShareActivity : Activity() {
         }
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val uploader = prefs.getString("uploader", null)
+        var uploaderName = prefs.getString("uploader", null)
         val uris: Iterable<Uri>
 
         if (intent.action == Intent.ACTION_SEND) {
@@ -49,9 +51,7 @@ class ShareActivity : Activity() {
             return
         }
 
-        if (uploader != null) {
-            uploadCallback = { doUploads(uploader, uris) }
-        } else {
+        if (uploaderName == null) {
             Log.d(TAG, "no default uploader set, using $DEFAULT_UPLOADER_FILENAME")
 
             File(getExternalFilesDir(null), DEFAULT_UPLOADER_FILENAME).outputStream().use { out ->
@@ -61,7 +61,15 @@ class ShareActivity : Activity() {
             }
 
             prefs.edit().putString("uploader", DEFAULT_UPLOADER_FILENAME).apply()
-            uploadCallback = { doUploads(DEFAULT_UPLOADER_FILENAME, uris) }
+            uploaderName = DEFAULT_UPLOADER_FILENAME
+        }
+
+        try {
+            val uploader = getUploader(this, uploaderName)
+            uploadCallback = { doUploads(uploader, uris) }
+        } catch (e: Exception) {
+            errDialogBuilder.setMessage(e.message).show()
+            return
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && uris.any { it.scheme == "file" })
@@ -86,6 +94,13 @@ class ShareActivity : Activity() {
         uploadCallback()
     }
 
+    private fun getUploader(context: Context, name: String): Uploader {
+        File(context.getExternalFilesDir(null), name).inputStream().use {
+            val up = Gson().fromJson(it.reader(), Uploader::class.java)
+            return up
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     fun requestPerms() {
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
@@ -94,7 +109,7 @@ class ShareActivity : Activity() {
             uploadCallback()
     }
 
-    fun doUploads(uploader: String, uris: Iterable<Uri>) {
+    fun doUploads(uploader: Uploader, uris: Iterable<Uri>) {
         uris.forEach {
             uploadFile(this, uploader, it)
         }

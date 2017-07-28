@@ -19,7 +19,7 @@ import com.google.gson.Gson
 import java.io.File
 import java.io.FileNotFoundException
 
-fun uploadFile(context: Context, uploaderName: String, file: Uri) {
+fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
     Log.d(TAG, "uploading")
     val notifManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val clipManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -30,12 +30,6 @@ fun uploadFile(context: Context, uploaderName: String, file: Uri) {
     Log.d(TAG, "authority ${file.authority} uri $file")
 
     val blob = blobFromUri(context, file)
-    val uploader = getUploader(context, uploaderName)
-
-    if (uploader == null) {
-        Toast.makeText(context, context.resources.getString(R.string.thing_not_found, uploaderName), Toast.LENGTH_SHORT).show()
-        return
-    }
 
     var rurl = uploader.RequestURL ?: throw Exception("no uploader url specified")
     if (!rurl.startsWith("http"))
@@ -107,15 +101,5 @@ private fun blobFromUri(context: Context, uri: Uri): Blob {
     val name = uri.getFilename(context)
     context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
         return Blob(name, fd.statSize, { context.contentResolver.openInputStream(uri) })
-    }
-}
-
-private fun getUploader(context: Context, name: String): Uploader? {
-    try {
-        File(context.getExternalFilesDir(null), name).inputStream().use {
-            return Gson().fromJson(it.reader(), Uploader::class.java)
-        }
-    } catch(e: FileNotFoundException) {
-        return null
     }
 }
