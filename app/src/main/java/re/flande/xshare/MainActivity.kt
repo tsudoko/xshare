@@ -26,24 +26,15 @@ class MainActivity : Activity() {
     }
 
     fun updateInfo(prefs: SharedPreferences) {
-        val current = prefs.getString("uploader", null)
+        val current = prefs.getString("uploader", null) ?: "none"
         val autoclip = prefs.getBoolean("autoclip", false)
         val clipSwitch = findViewById(R.id.switchAutoclip) as Switch
         clipSwitch.isChecked = autoclip
 
         val sb = StringBuilder(resources.getString(R.string.default_uploader))
         sb.append("<b>")
-        sb.append(current?.removeSuffix(".sxcu"))
-        sb.append("</b><br />")
-        sb.append(resources.getString(R.string.uploaders))
-
-        val files = getExternalFilesDir(null).listFiles()
-        for (i in files.indices) {
-            sb.append(files[i].name.removeSuffix(".sxcu"))
-
-            if (i < files.count() - 1)
-                sb.append(", ")
-        }
+        sb.append(current.removeSuffix(".sxcu"))
+        sb.append("</b>")
 
         val uptv = findViewById(R.id.uploaders_text) as TextView
         uptv.text = Html.fromHtml(sb.toString())

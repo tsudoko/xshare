@@ -32,11 +32,9 @@
 
 	<!-- MainActivity controls -->
 	<string name="default_uploader">Default uploader:\u20</string>
-	<string name="uploaders">Uploaders:\u20</string>
 
-	<string name="install_sample_config">Install sample config</string>
-	<string name="change_default_uploader">Change default uploader</string>
-	<string name="autoclip">Copy to clipboard</string>
+	<string name="choose_default_uploader">Choose default uploader</string>
+	<string name="autoclip">Copy file URL to clipboard</string>
 
 	<!-- Menu actions -->
 	<string name="add_uploader">Add uploader</string>
