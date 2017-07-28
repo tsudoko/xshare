@@ -1,8 +1,10 @@
 package re.flande.xshare
 
 import android.util.Log
+import com.google.gson.Gson
 import com.jayway.jsonpath.JsonPath
 import org.xml.sax.InputSource
+import java.io.InputStream
 import javax.xml.xpath.XPathFactory
 
 // ref: https://github.com/ShareX/ShareX/raw/master/ShareX.UploadersLib/Helpers/CustomUploaderItem.cs
@@ -95,5 +97,17 @@ class Uploader {
 
         Log.d(TAG, "result $rawResult")
         return rawResult.toString()
+    }
+
+    companion object {
+        fun fromInputStream(stream: InputStream): Uploader {
+            stream.use {
+                it.reader().use {
+                    val uploader = Gson().fromJson(it, Uploader::class.java)
+                    uploader.validate()
+                    return uploader
+                }
+            }
+        }
     }
 }

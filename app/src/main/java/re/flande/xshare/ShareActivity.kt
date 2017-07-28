@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import com.google.gson.Gson
 import java.io.File
 
 class ShareActivity : Activity() {
@@ -65,7 +63,9 @@ class ShareActivity : Activity() {
         }
 
         try {
-            uploader = getUploader(this, uploaderName)
+            File(getExternalFilesDir(null), uploaderName).inputStream().use {
+                uploader = Uploader.fromInputStream(it)
+            }
         } catch (e: Exception) {
             errDialogBuilder.setMessage(e.message).show()
             return
@@ -91,14 +91,6 @@ class ShareActivity : Activity() {
         }
 
         doUploads()
-    }
-
-    private fun getUploader(context: Context, name: String): Uploader {
-        File(context.getExternalFilesDir(null), name).inputStream().use {
-            val up = Gson().fromJson(it.reader(), Uploader::class.java)
-            up.validate()
-            return up
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)

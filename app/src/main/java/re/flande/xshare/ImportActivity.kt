@@ -38,7 +38,7 @@ class ImportActivity : Activity() {
 
     fun import(inStream: InputStream) {
         try {
-            val up = makeUploader(inStream)
+            val up = Uploader.fromInputStream(inStream)
             val name = (up.Name + ".sxcu").replace("/", "")
             val f = File(getExternalFilesDir(null), name)
 
@@ -56,16 +56,6 @@ class ImportActivity : Activity() {
                     .setTitle(R.string.unable_to_import)
                     .setMessage(e.message)
                     .setPositiveButton(android.R.string.ok, { _, _ -> })
-        }
-    }
-
-    private fun makeUploader(inStream: InputStream): Uploader {
-        inStream.use {
-            it.reader().use {
-                val uploader = Gson().fromJson(it, Uploader::class.java)
-                uploader.validate()
-                return uploader
-            }
         }
     }
 
