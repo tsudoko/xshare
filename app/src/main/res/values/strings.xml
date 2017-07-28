@@ -15,6 +15,7 @@
 
 	<!-- Dialog titles -->
 	<string name="unable_to_upload">Unable to upload</string>
+	<string name="unable_to_import">Unable to import</string>
 	<string name="something_happened">Something happened</string>
 
 	<!-- Dialog messages -->
