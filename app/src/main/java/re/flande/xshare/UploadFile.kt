@@ -51,6 +51,7 @@ fun uploadFile(context: Context, uploaderName: String, file: Uri) {
     var time = SystemClock.uptimeMillis()
 
     Fuel.upload(rurl, Method.valueOf(uploader.RequestType ?: "POST"), uploader.Arguments?.toList())
+            .timeout(30_000)
             .header(uploader.Headers)
             .name { uploader.FileFormName }
             .blob { _, _ -> blob }
