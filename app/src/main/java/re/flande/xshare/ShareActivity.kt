@@ -18,8 +18,9 @@ import java.io.File
 class ShareActivity : Activity() {
     val REQUESTPERMS_CODE = 0
 
-    var uploadCallback: () -> Unit = { throw AssertionError("no upload callback") }
     lateinit var errDialogBuilder: AlertDialog.Builder
+    lateinit var uploader: Uploader
+    lateinit var uris: Iterable<Uri>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,6 @@ class ShareActivity : Activity() {
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         var uploaderName = prefs.getString("uploader", null)
-        val uris: Iterable<Uri>
 
         if (intent.action == Intent.ACTION_SEND) {
             uris = arrayListOf(intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM))
@@ -65,8 +65,7 @@ class ShareActivity : Activity() {
         }
 
         try {
-            val uploader = getUploader(this, uploaderName)
-            uploadCallback = { doUploads(uploader, uris) }
+            uploader = getUploader(this, uploaderName)
         } catch (e: Exception) {
             errDialogBuilder.setMessage(e.message).show()
             return
@@ -75,7 +74,7 @@ class ShareActivity : Activity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && uris.any { it.scheme == "file" })
             requestPerms()
         else
-            uploadCallback()
+            doUploads()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?, grantResults: IntArray?) {
@@ -91,7 +90,7 @@ class ShareActivity : Activity() {
             }
         }
 
-        uploadCallback()
+        doUploads()
     }
 
     private fun getUploader(context: Context, name: String): Uploader {
@@ -107,10 +106,10 @@ class ShareActivity : Activity() {
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUESTPERMS_CODE)
         else
-            uploadCallback()
+            doUploads()
     }
 
-    fun doUploads(uploader: Uploader, uris: Iterable<Uri>) {
+    fun doUploads() {
         uris.forEach {
             uploadFile(this, uploader, it)
         }
