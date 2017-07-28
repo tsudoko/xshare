@@ -39,14 +39,14 @@ class ShareActivity : Activity() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         var uploaderName = prefs.getString("uploader", null)
 
-        if (intent.action == Intent.ACTION_SEND) {
-            uris = arrayListOf(intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM))
-        } else if (intent.action == Intent.ACTION_SEND_MULTIPLE) {
-            uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
-        } else {
-            errDialogBuilder.setMessage(resources.getString(R.string.intent_action_not_supported, intent.action))
-                    .show()
-            return
+        when (intent.action) {
+            Intent.ACTION_SEND -> uris = arrayListOf(intent.extras.getParcelable<Uri>(Intent.EXTRA_STREAM))
+            Intent.ACTION_SEND_MULTIPLE -> uris = intent.extras.getParcelableArrayList<Uri>(Intent.EXTRA_STREAM)
+            else -> {
+                errDialogBuilder.setMessage(resources.getString(R.string.intent_action_not_supported, intent.action))
+                        .show()
+                return
+            }
         }
 
         if (uploaderName == null) {
