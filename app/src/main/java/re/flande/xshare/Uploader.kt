@@ -18,6 +18,15 @@ class Uploader {
     internal var ResponseType: String? = null
     internal var URL: String = ""
 
+    class EmptyFieldException(val fieldName: String) : Exception("$fieldName must not be empty")
+
+    fun validate() {
+        if(RequestURL.isNullOrEmpty())
+            throw IllegalStateException("RequestURL")
+        if(FileFormName.isNullOrEmpty())
+            throw IllegalStateException("FileFormName")
+    }
+
     /*
      * Informal spec of the implemented query lang subset
      * "::=" assignments are BNF, "=" are regexps

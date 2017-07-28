@@ -97,6 +97,7 @@ class ShareActivity : Activity() {
     private fun getUploader(context: Context, name: String): Uploader {
         File(context.getExternalFilesDir(null), name).inputStream().use {
             val up = Gson().fromJson(it.reader(), Uploader::class.java)
+            up.validate()
             return up
         }
     }
