@@ -52,10 +52,15 @@ class ShareActivity : Activity() {
         if (uploaderName == null) {
             Log.d(TAG, "no default uploader set, using $DEFAULT_UPLOADER_FILENAME")
 
-            File(getExternalFilesDir(null), DEFAULT_UPLOADER_FILENAME).outputStream().use { out ->
-                resources.openRawResource(DEFAULT_UPLOADER_RESOURCE).use {
-                    it.copyTo(out)
+            try {
+                File(getExternalFilesDir(null), DEFAULT_UPLOADER_FILENAME).outputStream().use { out ->
+                    resources.openRawResource(DEFAULT_UPLOADER_RESOURCE).use {
+                        it.copyTo(out)
+                    }
                 }
+            } catch (e: Exception) {
+                errDialogBuilder.setMessage(e.message).show()
+                return
             }
 
             prefs.edit().putString("uploader", DEFAULT_UPLOADER_FILENAME).apply()
