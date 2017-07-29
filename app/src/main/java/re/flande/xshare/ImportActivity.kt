@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import java.io.File
 import java.io.InputStream
 
@@ -112,7 +112,9 @@ class ImportActivity : Activity() {
     }
 
     private fun uploaderToFile(up: Uploader, f: File) {
-        Gson().toJson(up, f.writer())
+        f.writer().use {
+            it.write(GsonBuilder().setPrettyPrinting().create().toJson(up))
+        }
 
         Toast.makeText(this, resources.getString(R.string.thing_added, up.Name), Toast.LENGTH_SHORT).show()
         finishAffinity()
