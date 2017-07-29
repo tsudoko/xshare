@@ -39,7 +39,7 @@ class ImportActivity : Activity() {
     fun import(inStream: InputStream) {
         try {
             val up = Uploader.fromInputStream(inStream)
-            val name = (up.Name + ".sxcu").replace("/", "")
+            val name = (up.Name + ".sxcu").replace("/", "⧸")
             val f = File(getExternalFilesDir(null), name)
 
             if(f.exists()) {
