@@ -11,13 +11,9 @@ import android.net.Uri
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.util.Log
-import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.Blob
 import com.github.kittinunf.fuel.core.Method
-import com.google.gson.Gson
-import java.io.File
-import java.io.FileNotFoundException
 
 fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
     Log.d(TAG, "uploading")
