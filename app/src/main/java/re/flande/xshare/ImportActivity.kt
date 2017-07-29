@@ -1,7 +1,11 @@
 package re.flande.xshare
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import com.google.gson.Gson
 import java.io.File
@@ -28,38 +32,86 @@ class ImportActivity : Activity() {
         if (name.split('.').last() != "sxcu") {
             getFatalDialogBuilder(this)
                     .setMessage(R.string.file_not_sxcu)
-                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> import(in_) })
+                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> importStream(in_) })
                     .setNegativeButton(android.R.string.cancel, { _, _ -> })
                     .show()
         } else {
-            import(in_)
+            importStream(in_)
         }
     }
 
-    fun import(inStream: InputStream) {
+    private fun import(up: Uploader) {
         try {
-            val up = Uploader.fromInputStream(inStream)
-            val name = (up.Name + ".sxcu").replace("/", "⧸")
+            val name = (up.Name + ".sxcu").replace("/", "⁄")
             val f = File(getExternalFilesDir(null), name)
 
             if(f.exists()) {
-                getFatalDialogBuilder(this)
+                val d = getFatalDialogBuilder(this)
                         .setMessage(resources.getString(R.string.thing_already_exists, up.Name))
-                        .setPositiveButton(R.string.proceed_anyway, { _, _ -> importFile(up, f) })
+                        .setPositiveButton(R.string.overwrite, { _, _ -> uploaderToFile(up, f) })
+                        .setNeutralButton(R.string.rename, null) // prevents calling d.dismiss()
                         .setNegativeButton(android.R.string.cancel, { _, _ -> })
-                        .show()
+                        .create()
+
+                d.setOnShowListener {
+                    d.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener { rename(up); d.hide() }
+                }
+                d.show()
             } else {
-                importFile(up, f)
+                uploaderToFile(up, f)
             }
         } catch (e: Exception) {
-            getFatalDialogBuilder(this)
-                    .setTitle(R.string.unable_to_import)
-                    .setMessage(e.message)
-                    .setPositiveButton(android.R.string.ok, { _, _ -> })
+            fail(e)
         }
     }
 
-    private fun importFile(up: Uploader, f: File) {
+    private fun importStream(inStream: InputStream) {
+        try {
+            val up = Uploader.fromInputStream(inStream)
+            import(up)
+        } catch (e: Exception) {
+            fail(e)
+        }
+    }
+
+    private fun fail(e: Exception) {
+        getFatalDialogBuilder(this)
+                .setTitle(R.string.unable_to_import)
+                .setMessage(e.localizedMessage ?: e.toString())
+                .setPositiveButton(android.R.string.ok, { _, _ -> })
+                .show()
+    }
+
+    private fun rename(up: Uploader) {
+        // FIXME: the IME doesn't get hidden when cancelled
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val edit = EditText(this)
+        edit.setSingleLine()
+        edit.hint = resources.getString(R.string.name)
+        edit.append(up.Name)
+
+        val d = getFatalDialogBuilder(this)
+                .setView(edit)
+                .setPositiveButton(R.string.rename, null)
+                .setNegativeButton(android.R.string.cancel, { _, _ -> })
+                .create()
+
+        val onDone = {
+            up.Name = edit.text.toString()
+            import(up)
+            d.hide()
+            imm.hideSoftInputFromWindow(edit.windowToken, 0)
+        }
+
+        edit.setOnEditorActionListener { _, _, _ -> onDone(); true }
+        d.setOnShowListener {
+            d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener { onDone() }
+            imm.showSoftInput(edit, InputMethodManager.SHOW_FORCED)
+        }
+        d.show()
+    }
+
+    private fun uploaderToFile(up: Uploader, f: File) {
         Gson().toJson(up, f.writer())
 
         Toast.makeText(this, resources.getString(R.string.thing_added, up.Name), Toast.LENGTH_SHORT).show()

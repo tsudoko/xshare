@@ -29,6 +29,11 @@
 	<!-- Dialog buttons -->
 	<string name="try_again">Try again</string>
 	<string name="proceed_anyway">Proceed anyway</string>
+	<string name="rename">Rename</string>
+	<string name="overwrite">Overwrite</string>
+
+	<!-- Input hints -->
+	<string name="name">Name</string> <!-- uploader name -->
 
 	<!-- MainActivity controls -->
 	<string name="default_uploader">Default uploader:\u20</string>
