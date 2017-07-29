@@ -35,7 +35,6 @@ class AddUploaderActivity : Activity() {
 
                             stub ?: return@responseJson
 
-                            layout.setBackgroundColor(resources.getColor(R.color.somethingHappened))
                             lv.visibility = View.GONE
                             stub.setOnInflateListener { _, inflated ->
                                 val tv = inflated.findViewById(R.id.errorText) as TextView
