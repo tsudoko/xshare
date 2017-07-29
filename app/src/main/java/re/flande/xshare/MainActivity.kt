@@ -48,7 +48,9 @@ class MainActivity : Activity() {
 
         val changeDefaultButton = findViewById(R.id.button2) as Button
         changeDefaultButton.setOnClickListener {
-            val files = getExternalFilesDir(null).listFiles().map({ it.name.removeSuffix(".sxcu") })
+            val files = getExternalFilesDir(null).listFiles()
+                    .filter( {it.name.endsWith(".sxcu") })
+                    .map({ it.name.removeSuffix(".sxcu") })
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, files)
 
             AlertDialog.Builder(this)
