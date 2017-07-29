@@ -46,6 +46,7 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
 
     Fuel.upload(rurl, Method.valueOf(uploader.RequestType ?: "POST"), uploader.Arguments?.toList())
             .timeout(30_000)
+            .timeoutRead(30_000)
             .header(uploader.Headers)
             .name { uploader.FileFormName }
             .blob { _, _ -> blob }
