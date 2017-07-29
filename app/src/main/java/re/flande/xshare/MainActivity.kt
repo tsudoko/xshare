@@ -1,75 +1,33 @@
 package re.flande.xshare
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
-import android.text.Html
+import android.preference.ListPreference
+import android.preference.PreferenceActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Switch
-import android.widget.TextView
 
-class MainActivity : Activity() {
+class MainActivity : PreferenceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_main)
-    }
-
-    fun updateInfo(prefs: SharedPreferences) {
-        val current = prefs.getString("uploader", null) ?: "none"
-        val autoclip = prefs.getBoolean("autoclip", false)
-        val clipSwitch = findViewById(R.id.switchAutoclip) as Switch
-        clipSwitch.isChecked = autoclip
-
-        val sb = StringBuilder(resources.getString(R.string.default_uploader))
-        sb.append("<b>")
-        sb.append(current.removeSuffix(".sxcu"))
-        sb.append("</b>")
-
-        val uptv = findViewById(R.id.uploaders_text) as TextView
-        uptv.text = Html.fromHtml(sb.toString())
+        addPreferencesFromResource(R.xml.preferences)
     }
 
     override fun onStart() {
         super.onStart()
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        updateInfo(prefs)
+        val files = getExternalFilesDir(null).listFiles()
+                .filter( {it.name.endsWith(".sxcu") })
+                .map({ it.name })
 
-        val changeDefaultButton = findViewById(R.id.button2) as Button
-        changeDefaultButton.setOnClickListener {
-            val files = getExternalFilesDir(null).listFiles()
-                    .filter( {it.name.endsWith(".sxcu") })
-                    .map({ it.name.removeSuffix(".sxcu") })
-            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, files)
-
-            AlertDialog.Builder(this)
-                    .setAdapter(adapter, { _, i ->
-                        val editor = prefs.edit()
-                        editor?.putString("uploader", files[i] + ".sxcu")
-                        editor?.commit()
-                        updateInfo(prefs)
-                    })
-                    .show()
-        }
-
-        val autoclipSwitch = findViewById(R.id.switchAutoclip) as Switch
-        autoclipSwitch.setOnClickListener {
-            val editor = prefs.edit()
-            editor?.putBoolean("autoclip", (it as Switch).isChecked)
-            editor?.commit()
-            updateInfo(prefs)
-        }
+        val uploaderPref = findPreference("uploader") as ListPreference
+        uploaderPref.entries = files.map { it.removeSuffix(".sxcu") }.toTypedArray()
+        uploaderPref.entryValues = files.toTypedArray()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

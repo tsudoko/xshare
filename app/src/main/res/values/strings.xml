@@ -35,10 +35,8 @@
 	<!-- Input hints -->
 	<string name="name">Name</string> <!-- uploader name -->
 
-	<!-- MainActivity controls -->
-	<string name="default_uploader">Default uploader:\u20</string>
-
-	<string name="choose_default_uploader">Choose default uploader</string>
+	<!-- Preferences -->
+	<string name="default_uploader">Default uploader</string>
 	<string name="autoclip">Copy file URL to clipboard</string>
 
 	<!-- Menu actions -->
