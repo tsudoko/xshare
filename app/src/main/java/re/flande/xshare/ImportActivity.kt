@@ -30,11 +30,16 @@ class ImportActivity : Activity() {
         }
 
         if (name.split('.').last() != "sxcu") {
-            getFatalDialogBuilder(this)
+            val d = getFatalDialogBuilder(this)
                     .setMessage(R.string.file_not_sxcu)
-                    .setPositiveButton(R.string.proceed_anyway, { _, _ -> importStream(in_) })
+                    .setPositiveButton(R.string.proceed_anyway, null) // prevents calling d.dismiss()
                     .setNegativeButton(android.R.string.cancel, { _, _ -> })
-                    .show()
+                    .create()
+
+            d.setOnShowListener {
+                d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener { importStream(in_); d.hide() }
+            }
+            d.show()
         } else {
             importStream(in_)
         }
@@ -49,7 +54,7 @@ class ImportActivity : Activity() {
                 val d = getFatalDialogBuilder(this)
                         .setMessage(resources.getString(R.string.thing_already_exists, up.Name))
                         .setPositiveButton(R.string.overwrite, { _, _ -> uploaderToFile(up, f) })
-                        .setNeutralButton(R.string.rename, null) // prevents calling d.dismiss()
+                        .setNeutralButton(R.string.rename, null)
                         .setNegativeButton(android.R.string.cancel, { _, _ -> })
                         .create()
 
