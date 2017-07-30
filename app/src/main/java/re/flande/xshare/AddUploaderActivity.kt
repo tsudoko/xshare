@@ -1,12 +1,16 @@
 package re.flande.xshare
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewStub
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ListView
+import android.widget.TextView
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.result.Result
@@ -80,7 +84,10 @@ class AddUploaderActivity : Activity() {
                 .response { _, _, result ->
                     when (result) {
                         is Result.Failure -> {
-                            Toast.makeText(this, resources.getString(R.string.failed_to_add, name, result.error), Toast.LENGTH_SHORT).show()
+                            AlertDialog.Builder(this)
+                                    .setMessage(resources.getString(R.string.failed_to_add, name, result.error))
+                                    .setPositiveButton(android.R.string.ok, { _, _ -> })
+                                    .show()
                         }
                         is Result.Success -> {
                             val intent = Intent(this, ImportActivity::class.java)
