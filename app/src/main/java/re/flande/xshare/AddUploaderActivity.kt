@@ -26,7 +26,7 @@ class AddUploaderActivity : Activity() {
     override fun onStart() {
         super.onStart()
 
-        Fuel.get("$GITHUB_APIURL/repos/${resources.getString(R.string.uploaders_repo_owner)}/${resources.getString(R.string.uploaders_repo_name)}/contents/")
+        Fuel.get("$GITHUB_APIURL/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/contents/")
                 .header(mapOf("Accept" to "application/vnd.github.v$GITHUB_APIVER+json"))
                 .responseJson { _, _, result ->
                     findViewById(R.id.progressBar).fadeOut()
