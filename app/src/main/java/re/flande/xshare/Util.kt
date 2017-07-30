@@ -2,8 +2,10 @@ package re.flande.xshare
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Notification
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.provider.OpenableColumns
 import android.view.View
 import java.util.*
@@ -42,4 +44,11 @@ fun View.fadeIn(duration: Long = resources.getInteger(android.R.integer.config_s
 
 fun View.fadeOut(duration: Long = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()) {
     fade(false, duration)
+}
+
+fun Notification.Builder.setContentInfoN(text: CharSequence?): Notification.Builder {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        return setSubText(text)
+    else
+        return setContentInfo(text)
 }

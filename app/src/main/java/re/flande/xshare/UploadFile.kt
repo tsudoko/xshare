@@ -60,7 +60,7 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
                     time = curTime
 
                 val p: Int = (read * 100 / total).toInt()
-                nBuilder.setContentText("$p%")
+                nBuilder.setContentInfoN("$p%")
                         .setProgress(100, p, false)
                 notifManager.notify(notifID, nBuilder.build())
             }
@@ -69,7 +69,8 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
                 notifManager.cancel(notifID)
             }
             .responseString { _, _, (d, err) ->
-                nBuilder.setProgress(0, 0, false)
+                nBuilder.setContentInfoN(null)
+                        .setProgress(0, 0, false)
                         .setOngoing(false)
                         .setSmallIcon(android.R.drawable.stat_sys_upload_done)
                 notifManager.cancel(notifID)
