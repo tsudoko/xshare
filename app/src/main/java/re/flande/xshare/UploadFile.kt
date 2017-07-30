@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.util.Log
+import android.widget.Toast
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.Blob
 import com.github.kittinunf.fuel.core.Method
@@ -25,7 +26,7 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
     Log.d(TAG, "notifID $notifID")
     Log.d(TAG, "authority ${file.authority} uri $file")
 
-    val blob = blobFromUri(context, file)
+    val blob = blobFromUri(context, file) ?: return
 
     var rurl = uploader.RequestURL ?: throw Exception("no uploader url specified")
     if (!rurl.startsWith("http"))
@@ -94,10 +95,15 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
             }
 }
 
-private fun blobFromUri(context: Context, uri: Uri): Blob {
+private fun blobFromUri(context: Context, uri: Uri): Blob? {
     context.grantUriPermission(context.packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    val name = uri.getFilename(context)
-    context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
-        return Blob(name, fd.statSize, { context.contentResolver.openInputStream(uri) })
+    try {
+        val name = uri.getFilename(context)
+        context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
+            return Blob(name, fd.statSize, { context.contentResolver.openInputStream(uri) })
+        }
+    } catch(e: Exception) {
+        Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
+        return null
     }
 }
