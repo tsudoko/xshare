@@ -21,12 +21,15 @@ class ImportActivity : Activity() {
         val name: String
         val in_: InputStream
 
-        if(contents == null) {
+        if (intent.data != null) {
             name = intent.data.getFilename(this)
             in_ = contentResolver.openInputStream(intent.data)
-        } else {
+        } else if (contents != null) {
             name = intent.extras.getString("name")
             in_ = contents.inputStream()
+        } else {
+            fail(Exception(resources.getString(R.string.nothing_to_import)))
+            return
         }
 
         if (name.split('.').last() != "sxcu") {
