@@ -33,7 +33,6 @@ class AddUploaderActivity : Activity() {
 
                     when (result) {
                         is Result.Failure -> {
-                            val layout = findViewById(R.id.addUploaderLayout)
                             val lv = findViewById(R.id.uploader_list) as ListView
                             val stub = findViewById(R.id.viewStub) as ViewStub?
 
