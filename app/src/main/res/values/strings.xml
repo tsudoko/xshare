@@ -17,7 +17,7 @@
 
 	<!-- Dialog messages -->
 	<string name="no_file_managers">None of the installed file managers support opening directories. Navigate to %1$s manually.</string>
-	<string name="no_extra_stream">No extra stream.</string>
+	<string name="no_extra_stream">The specified data is not a file.</string>
 	<string name="file_not_sxcu">The specified file doesn’t have .sxcu extension.</string>
 	<string name="thing_already_exists">%1$s already exists.</string>
 	<string name="no_storage_permission">No permission to read external storage.</string>
