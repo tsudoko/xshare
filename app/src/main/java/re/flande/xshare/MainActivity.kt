@@ -2,6 +2,8 @@ package re.flande.xshare
 
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +12,7 @@ import android.preference.PreferenceActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.PopupMenu
 
 class MainActivity : PreferenceActivity() {
 
@@ -39,8 +42,39 @@ class MainActivity : PreferenceActivity() {
         item ?: return false
 
         itemSelect@ when (item.itemId) {
-            R.id.action_add ->
-                startActivity(Intent(this, AddUploaderActivity::class.java))
+            R.id.action_add -> {
+                // TODO: uploaders aren't reloaded immediately (e.g. after addfromclip)
+                val menu = PopupMenu(this, findViewById(R.id.action_add))
+                menu.inflate(R.menu.menu_add_uploader)
+                menu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.action_addfromclip -> {
+                            val clipManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val clip = clipManager.primaryClip
+
+                            val intent = Intent(this, ImportActivity::class.java)
+                                    .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                            (0..clip.itemCount - 1).map { clip.getItemAt(it) }.forEach {
+                                if (it.text != null) {
+                                    intent.putExtra("contents", it.text.toString().toByteArray()) // FIXME shouldn't need conversion
+                                    return@forEach
+                                } else if (it.uri != null) {
+                                    intent.data = it.uri
+                                    return@forEach
+                                }
+                            }
+
+                            startActivity(intent)
+                        }
+                        R.id.action_addfromsample -> startActivity(Intent(this, ChooseSampleActivity::class.java))
+                    }
+
+                    true
+                }
+                menu.show()
+            }
             R.id.action_opendir -> {
                 val intent = Intent(Intent.ACTION_VIEW)
                 val uri = Uri.fromFile(getExternalFilesDir(null))

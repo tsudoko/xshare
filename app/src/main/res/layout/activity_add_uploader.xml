@@ -4,7 +4,7 @@
 				android:id="@+id/addUploaderLayout"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				tools:context="re.flande.xshare.AddUploaderActivity">
+				tools:context="re.flande.xshare.ChooseSampleActivity">
 
 	<ProgressBar
 		android:id="@+id/progressBar"

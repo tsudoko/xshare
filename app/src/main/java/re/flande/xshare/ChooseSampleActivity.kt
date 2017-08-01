@@ -16,7 +16,7 @@ import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.result.Result
 import java.net.URLDecoder
 
-class AddUploaderActivity : Activity() {
+class ChooseSampleActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

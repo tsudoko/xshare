@@ -1,6 +1,8 @@
 <resources>
 	<string name="app_name">Xshare</string>
 
+	<string name="select_uploader">Select uploader</string>
+
 	<!-- Notifications -->
 	<string name="upload_complete">Upload complete.</string>
 	<string name="upload_failed">Upload failed.</string>
@@ -40,4 +42,8 @@
 	<!-- Menu actions -->
 	<string name="add_uploader">Add uploader</string>
 	<string name="open_uploader_dir">Browse uploaders</string>
+
+	<string name="from_clipboard">From clipboard</string>
+	<string name="from_file">From file</string>
+	<string name="from_sample">From sample uploaders</string>
 </resources>
