@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
@@ -83,6 +84,8 @@ class ImportActivity : Activity() {
     }
 
     private fun fail(e: Exception) {
+        Log.d(TAG, "fail()'d, stack trace below")
+        e.printStackTrace()
         getFatalDialogBuilder(this)
                 .setTitle(R.string.unable_to_import)
                 .setMessage(e.localizedMessage ?: e.toString())
