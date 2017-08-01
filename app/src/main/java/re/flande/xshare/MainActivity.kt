@@ -1,5 +1,6 @@
 package re.flande.xshare
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.ClipboardManager
@@ -15,6 +16,8 @@ import android.view.MenuItem
 import android.widget.PopupMenu
 
 class MainActivity : PreferenceActivity() {
+
+    val RES_UPLOADER_ADD = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +71,12 @@ class MainActivity : PreferenceActivity() {
 
                             startActivity(intent)
                         }
+                        R.id.action_addfromfile -> {
+                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                                    .addCategory(Intent.CATEGORY_OPENABLE)
+                                    .setType("*/*")
+                            startActivityForResult(intent, RES_UPLOADER_ADD)
+                        }
                         R.id.action_addfromsample -> startActivity(Intent(this, ChooseSampleActivity::class.java))
                     }
 
@@ -104,5 +113,29 @@ class MainActivity : PreferenceActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_CANCELED)
+            return
+
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            AlertDialog.Builder(this)
+                    .setMessage("some error here, result $resultCode data null ${data == null}")
+                    .show()
+            return
+        }
+
+        when (requestCode) {
+            RES_UPLOADER_ADD -> {
+                val intent = Intent(this, ImportActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .setData(data.data)
+                startActivity(intent)
+            }
+        }
     }
 }
