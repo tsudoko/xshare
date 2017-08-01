@@ -18,7 +18,7 @@ class ImportActivity : Activity() {
 
         val contents = intent.extras?.getByteArray("contents")
 
-        val name: String
+        val name: String?
         val in_: InputStream
 
         if (intent.data != null) {
@@ -32,7 +32,7 @@ class ImportActivity : Activity() {
             return
         }
 
-        if (name.split('.').last() != "sxcu") {
+        if (name != null && name.split('.').last() != "sxcu") {
             val d = getFatalDialogBuilder(this)
                     .setMessage(R.string.file_not_sxcu)
                     .setPositiveButton(R.string.proceed_anyway, null) // prevents calling d.dismiss()
