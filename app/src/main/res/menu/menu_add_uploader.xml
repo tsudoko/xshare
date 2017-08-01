@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/action_addfromclip"
+		android:title="@string/from_clipboard" />
+	<item
+		android:id="@+id/action_addfromfile"
+		android:title="@string/from_file" />
+	<item
+		android:id="@+id/action_addfromsample"
+		android:title="@string/from_sample" />
+</menu>
