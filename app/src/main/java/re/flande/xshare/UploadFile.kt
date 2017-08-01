@@ -80,15 +80,21 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
                     nBuilder.setContentText(context.resources.getString(R.string.upload_failed))
                             .setStyle(Notification.BigTextStyle().bigText(err.toString()))
                 } else {
-                    val url = uploader.prepareUrl(d)
-                    val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    val intent = PendingIntent.getActivity(context, 0, i, 0)
-                    nBuilder.setContentText(url)
-                            .setStyle(Notification.BigTextStyle().bigText(url))
-                            .setContentIntent(intent)
+                    try {
+                        val url = uploader.prepareUrl(d)
+                        val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        val intent = PendingIntent.getActivity(context, 0, i, 0)
+                        nBuilder.setContentText(url)
+                                .setStyle(Notification.BigTextStyle().bigText(url))
+                                .setContentIntent(intent)
 
-                    if (prefs.getBoolean("autoclip", false))
-                        clipManager.primaryClip = ClipData.newPlainText("URL", url)
+                        if (prefs.getBoolean("autoclip", false))
+                            clipManager.primaryClip = ClipData.newPlainText("URL", url)
+                    } catch(e: Exception) {
+                        val msg = context.resources.getString(R.string.response_text_and_error, d, e.toString())
+                        nBuilder.setContentText(context.resources.getString(R.string.response_handling_error))
+                                .setStyle(Notification.BigTextStyle().bigText(msg))
+                    }
                 }
 
                 notifManager.notify(notifID, nBuilder.build())
