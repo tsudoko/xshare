@@ -29,6 +29,7 @@ dependencies {
 	compile 'com.github.kittinunf.fuel:fuel:1.9.0'
 	compile 'com.github.kittinunf.fuel:fuel-android:1.9.0'
 	compile 'com.jayway.jsonpath:json-path:2.4.0'
+	compile 'com.github.tony19:named-regexp:0.2.5'
 
 	testCompile 'junit:junit:4.12'
 }

@@ -1,6 +1,7 @@
 package re.flande.xshare
 
 import android.util.Log
+import com.google.code.regexp.Pattern
 import com.google.gson.Gson
 import com.jayway.jsonpath.JsonPath
 import org.xml.sax.InputSource
@@ -16,7 +17,7 @@ class Uploader {
     internal var FileFormName: String = ""
     internal var Headers: Map<String, String>? = null
     internal var Arguments: Map<String, String>? = null
-    internal var RegexList: Array<String>? = null
+    lateinit var RegexList: Array<String>
     internal var ResponseType: String? = null
     internal var URL: String = ""
 
@@ -50,15 +51,16 @@ class Uploader {
 
         for (c in URL.toCharArray()) {
             if (c == '$') {
-                insideQuery = !insideQuery
-
-                if (!afterType)
+                if (insideQuery && !afterType) {
                     query = queryType
+                    queryType = "regex".toCharArray()
+                }
 
                 if (queryType.isNotEmpty()) {
                     when (String(queryType)) {
                         "json" -> doQuery = { JsonPath.read(response, it) }
                         "xml" -> doQuery = { XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
+                        "regex" -> doQuery = { matchRegex(response, it) }
                         "random" -> doQuery = { it.split('|').getRandom() }
                         else -> throw NotImplementedError("query type ${String(queryType)} not implemented")
                     }
@@ -72,6 +74,7 @@ class Uploader {
                     rawResult.append(doQuery(String(query)))
                 }
 
+                insideQuery = !insideQuery
                 query = charArrayOf()
                 queryType = charArrayOf()
                 doQuery = null
@@ -97,6 +100,38 @@ class Uploader {
 
         Log.d(TAG, "result $rawResult")
         return rawResult.toString()
+    }
+
+    private fun matchRegex(text: String, query: String): String {
+        val reIndex = StringBuilder()
+        var afterIndex = false
+        val groupName = StringBuilder()
+
+        for (c in query) {
+            if (!afterIndex) {
+                when {
+                    c.isDigit() -> reIndex.append(c)
+                    c == ',' -> afterIndex = true
+                }
+            } else {
+                groupName.append(c)
+            }
+        }
+
+        val i = Integer.parseInt(reIndex.toString()) - 1
+        val matcher = Pattern.compile(RegexList[i]).matcher(text)
+        matcher.find()
+
+        if (groupName.isEmpty()) {
+            return matcher.group()
+        } else {
+            val g = groupName.toString()
+            try {
+                return matcher.group(Integer.parseInt(g))
+            } catch (_: NumberFormatException) {
+                return matcher.group(g)
+            }
+        }
     }
 
     companion object {
