@@ -63,7 +63,7 @@
 		</activity>
 		<activity
 			android:name=".ChooseSampleActivity"
-			android:label="@string/select_uploader"
+			android:label="@string/choose_uploader"
 			android:parentActivityName=".MainActivity" />
 	</application>
 
