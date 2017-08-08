@@ -46,40 +46,17 @@ class MainActivity : PreferenceActivity() {
 
         itemSelect@ when (item.itemId) {
             R.id.action_add -> {
-                // TODO: uploaders aren't reloaded immediately (e.g. after addfromclip)
                 val menu = PopupMenu(this, findViewById(R.id.action_add))
                 menu.inflate(R.menu.menu_add_uploader)
                 menu.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
-                        R.id.action_addfromclip -> {
-                            val clipManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            val clip = clipManager.primaryClip
-
-                            val intent = Intent(this, ImportActivity::class.java)
-                                    .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                            (0..clip.itemCount - 1).map { clip.getItemAt(it) }.forEach {
-                                if (it.text != null) {
-                                    intent.putExtra("contents", it.text.toString().toByteArray()) // FIXME shouldn't need conversion
-                                    return@forEach
-                                } else if (it.uri != null) {
-                                    intent.data = it.uri
-                                    return@forEach
-                                }
-                            }
-
-                            startActivity(intent)
+                        R.id.action_addfrom -> {
+                            val menu = PopupMenu(this, findViewById(R.id.action_addfrom) ?: findViewById(R.id.action_add))
+                            menu.inflate(R.menu.menu_add_uploader_from)
+                            menu.setOnMenuItemClickListener { addFromOnItemClickListener(it) }
+                            menu.show()
                         }
-                        R.id.action_addfromfile -> {
-                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                                    .addCategory(Intent.CATEGORY_OPENABLE)
-                                    .setType("*/*")
-                            startActivityForResult(intent, RES_UPLOADER_ADD)
-                        }
-                        R.id.action_addfromsample -> startActivity(Intent(this, ChooseSampleActivity::class.java))
                     }
-
                     true
                 }
                 menu.show()
@@ -113,6 +90,40 @@ class MainActivity : PreferenceActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun addFromOnItemClickListener(item: MenuItem): Boolean {
+        // TODO: uploaders aren't reloaded immediately (e.g. after addfromclip)
+        when (item.itemId) {
+            R.id.action_addfromclip -> {
+                val clipManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = clipManager.primaryClip
+
+                val intent = Intent(this, ImportActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                (0..clip.itemCount - 1).map { clip.getItemAt(it) }.forEach {
+                    if (it.text != null) {
+                        intent.putExtra("contents", it.text.toString().toByteArray()) // FIXME shouldn't need conversion
+                        return@forEach
+                    } else if (it.uri != null) {
+                        intent.data = it.uri
+                        return@forEach
+                    }
+                }
+
+                startActivity(intent)
+            }
+            R.id.action_addfromfile -> {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .setType("*/*")
+                startActivityForResult(intent, RES_UPLOADER_ADD)
+            }
+            R.id.action_addfromsample -> startActivity(Intent(this, ChooseSampleActivity::class.java))
+        }
+        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

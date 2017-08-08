@@ -46,7 +46,9 @@
 	<string name="add_uploader">Add uploader</string>
 	<string name="open_uploader_dir">Browse uploaders</string>
 
-	<string name="from_clipboard">From clipboard</string>
-	<string name="from_file">From file</string>
-	<string name="from_sample">From sample uploaders</string>
+	<string name="from___">From…</string>
+
+	<string name="clipboard">Clipboard</string>
+	<string name="file">File</string>
+	<string name="sample_uploaders">Sample uploaders</string>
 </resources>
