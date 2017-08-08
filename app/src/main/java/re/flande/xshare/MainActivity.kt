@@ -99,6 +99,14 @@ class MainActivity : PreferenceActivity() {
                 val clipManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = clipManager.primaryClip
 
+                if (clip == null) {
+                    AlertDialog.Builder(this)
+                            .setMessage(R.string.clipboard_empty)
+                            .setPositiveButton(android.R.string.ok, { _, _ -> })
+                            .show()
+                    return false
+                }
+
                 val intent = Intent(this, ImportActivity::class.java)
                         .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

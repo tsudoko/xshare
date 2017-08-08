@@ -28,6 +28,7 @@
 	<string name="no_storage_permission">No permission to read external storage.</string>
 	<string name="intent_action_not_supported">Intent action %1$s not supported.</string>
 	<string name="nothing_to_import">Nothing to import.</string>
+	<string name="clipboard_empty">Clipboard is empty.</string>
 
 	<!-- Dialog buttons -->
 	<string name="try_again">Try again</string>
