@@ -20,13 +20,13 @@ fun getFatalDialogBuilder(context: Activity): AlertDialog.Builder {
 }
 
 fun Uri.getFilename(context: Context): String {
-    if (scheme == "file")
-        return lastPathSegment
-
     context.contentResolver.query(this, null, null, null, null).use { cursor ->
         if (cursor?.moveToFirst() ?: return@use)
             return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
     }
+
+    if (scheme == "file")
+        return lastPathSegment
 
     throw Exception("don't know how to get file name from $this")
 }
