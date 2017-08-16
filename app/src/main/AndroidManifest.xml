@@ -35,6 +35,7 @@
 		</activity>
 		<activity
 			android:name=".ImportActivity"
+			android:label="@string/add_uploader"
 			android:theme="@style/Theme.DeviceDefault.Translucent.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
