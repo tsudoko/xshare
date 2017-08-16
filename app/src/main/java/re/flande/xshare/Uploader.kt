@@ -62,7 +62,7 @@ class Uploader {
                         "xml" -> doQuery = { XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
                         "regex" -> doQuery = { matchRegex(response, it) }
                         "random" -> doQuery = { it.split('|').getRandom() }
-                        else -> throw NotImplementedError("query type ${String(queryType)} not implemented")
+                        else -> throw IllegalStateException("query type ${String(queryType)} not implemented")
                     }
                 }
 
