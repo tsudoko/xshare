@@ -21,7 +21,7 @@
 	<string name="something_happened">Something happened</string>
 
 	<!-- Dialog messages -->
-	<string name="no_file_managers">None of the installed file managers support opening directories. Navigate to %1$s manually.</string>
+	<string name="no_file_managers">None of the installed file managers support opening directories from other apps. Open %1$s manually.</string>
 	<string name="no_extra_stream">Specified data is not a file.</string>
 	<string name="file_not_sxcu">Specified file doesn’t have .sxcu extension.</string>
 	<string name="thing_already_exists">%1$s already exists.</string>
