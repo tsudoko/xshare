@@ -9,24 +9,25 @@ import java.io.InputStream
 import javax.xml.xpath.XPathFactory
 
 // ref: https://github.com/ShareX/ShareX/raw/master/ShareX.UploadersLib/Helpers/CustomUploaderItem.cs
-class Uploader {
-    internal var Name: String? = null
-    internal var DestinationType: String? = null
-    internal var RequestType: String? = null
-    internal var RequestURL: String? = null
-    internal var FileFormName: String = ""
-    internal var Headers: Map<String, String>? = null
-    internal var Arguments: Map<String, String>? = null
-    lateinit var RegexList: Array<String>
-    internal var ResponseType: String? = null
-    internal var URL: String = ""
+class Uploader(var Name: String,
+               var DestinationType: String,
+               var RequestType: String,
+               var RequestURL: String,
+               var FileFormName: String,
+               var Headers: Map<String, String>,
+               var Arguments: Map<String, String>,
+               var RegexList: Array<String>,
+               var ResponseType: String,
+               var URL: String) {
 
     class EmptyFieldException(val fieldName: String) : Exception("$fieldName must not be empty")
 
     fun validate() {
-        if(RequestURL.isNullOrEmpty())
+        if(RequestType.isEmpty())
+            RequestType = "POST"
+        if(RequestURL.isEmpty())
             throw EmptyFieldException("RequestURL")
-        if(FileFormName.isNullOrEmpty())
+        if(FileFormName.isEmpty())
             throw EmptyFieldException("FileFormName")
     }
 
