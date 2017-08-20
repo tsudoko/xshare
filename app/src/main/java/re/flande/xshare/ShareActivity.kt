@@ -14,7 +14,7 @@ import android.util.Log
 import java.io.File
 
 class ShareActivity : Activity() {
-    val REQUESTPERMS_CODE = 0
+    private val REQUESTPERMS_CODE = 0
 
     lateinit var errDialogBuilder: AlertDialog.Builder
     lateinit var uploader: Uploader
@@ -99,14 +99,14 @@ class ShareActivity : Activity() {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    fun requestPerms() {
+    private fun requestPerms() {
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUESTPERMS_CODE)
         else
             doUploads()
     }
 
-    fun doUploads() {
+    private fun doUploads() {
         uris.forEach {
             uploadFile(this, uploader, it)
         }

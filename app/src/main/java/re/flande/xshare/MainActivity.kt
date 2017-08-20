@@ -16,8 +16,7 @@ import android.view.MenuItem
 import android.widget.PopupMenu
 
 class MainActivity : PreferenceActivity() {
-
-    val RES_UPLOADER_ADD = 0
+    private val RES_UPLOADER_ADD = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
