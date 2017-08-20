@@ -46,17 +46,18 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
                 .setContentText(context.resources.getString(R.string.upload_failed))
                 .setStyle(Notification.BigTextStyle().bigText(e.toString()))
         notifManager.notify(notifID, nBuilder.build())
+        return
     }
 
     var rurl = uploader.RequestURL
-    if (!rurl.startsWith("http"))
+    if (!rurl!!.startsWith("http"))
         rurl = "http://" + rurl
 
-    Fuel.upload(rurl, Method.valueOf(uploader.RequestType), uploader.Arguments.toList())
+    Fuel.upload(rurl, Method.valueOf(uploader.RequestType!!), uploader.Arguments?.toList())
             .timeout(30_000)
             .timeoutRead(30_000)
             .header(uploader.Headers)
-            .name { uploader.FileFormName }
+            .name { uploader.FileFormName!! }
             .blob { _, _ -> blob }
             .progress { read, total ->
                 //Log.v(TAG, "read $read total $total")

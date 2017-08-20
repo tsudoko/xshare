@@ -9,25 +9,25 @@ import java.io.InputStream
 import javax.xml.xpath.XPathFactory
 
 // ref: https://github.com/ShareX/ShareX/raw/master/ShareX.UploadersLib/Helpers/CustomUploaderItem.cs
-class Uploader(var Name: String,
-               var DestinationType: String,
-               var RequestType: String,
-               var RequestURL: String,
-               var FileFormName: String,
-               var Headers: Map<String, String>,
-               var Arguments: Map<String, String>,
-               var RegexList: Array<String>,
-               var ResponseType: String,
-               var URL: String) {
+class Uploader(var Name: String?,
+               var DestinationType: String?,
+               var RequestType: String?,
+               var RequestURL: String?,
+               var FileFormName: String?,
+               var Headers: Map<String, String>?,
+               var Arguments: Map<String, String>?,
+               var RegexList: Array<String>?,
+               var ResponseType: String?,
+               var URL: String?) {
 
     class EmptyFieldException(val fieldName: String) : Exception("$fieldName must not be empty")
 
     fun validate() {
-        if(RequestType.isEmpty())
+        if(RequestType.isNullOrEmpty())
             RequestType = "POST"
-        if(RequestURL.isEmpty())
+        if(RequestURL.isNullOrEmpty())
             throw EmptyFieldException("RequestURL")
-        if(FileFormName.isEmpty())
+        if(FileFormName.isNullOrEmpty())
             throw EmptyFieldException("FileFormName")
     }
 
@@ -47,10 +47,10 @@ class Uploader(var Name: String,
         var queryType = charArrayOf()
         var doQuery: ((String) -> String)? = null
 
-        if (URL.isEmpty())
+        if (URL.isNullOrEmpty())
             return response
 
-        for (c in URL.toCharArray()) {
+        for (c in URL!!.toCharArray()) {
             if (c == '$') {
                 if (insideQuery && !afterType) {
                     query = queryType
@@ -120,7 +120,7 @@ class Uploader(var Name: String,
         }
 
         val i = Integer.parseInt(reIndex.toString()) - 1
-        val matcher = Pattern.compile(RegexList[i]).matcher(text)
+        val matcher = Pattern.compile(RegexList?.get(i) ?: throw EmptyFieldException("RegexList")).matcher(text)
         matcher.find()
 
         if (groupName.isEmpty()) {
