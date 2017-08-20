@@ -24,13 +24,13 @@ class Uploader(var Name: String?,
     class EmptyFieldException(val fieldName: String) : Exception("$fieldName must not be empty")
 
     fun validate() {
-        if(RequestType.isNullOrEmpty())
+        if (RequestType.isNullOrEmpty())
             RequestType = "POST"
         Method.valueOf(RequestType!!)
 
-        if(RequestURL.isNullOrEmpty())
+        if (RequestURL.isNullOrEmpty())
             throw EmptyFieldException("RequestURL")
-        if(FileFormName.isNullOrEmpty())
+        if (FileFormName.isNullOrEmpty())
             throw EmptyFieldException("FileFormName")
     }
 

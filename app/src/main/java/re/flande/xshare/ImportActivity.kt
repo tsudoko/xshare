@@ -58,7 +58,7 @@ class ImportActivity : Activity() {
             val name = (up.Name + ".sxcu").replace("/", "⁄")
             val f = File(getExternalFilesDir(null), name)
 
-            if(f.exists()) {
+            if (f.exists()) {
                 val d = getFatalDialogBuilder(this)
                         .setMessage(resources.getString(R.string.thing_already_exists, up.Name))
                         .setPositiveButton(R.string.overwrite, { _, _ -> uploaderToFile(up, f) })

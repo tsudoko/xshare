@@ -27,7 +27,7 @@ class MainActivity : PreferenceActivity() {
         super.onStart()
 
         val files = getExternalFilesDir(null).listFiles()
-                .filter( {it.name.endsWith(".sxcu") })
+                .filter({ it.name.endsWith(".sxcu") })
                 .map({ it.name })
 
         val uploaderPref = findPreference("uploader") as ListPreference
@@ -77,7 +77,7 @@ class MainActivity : PreferenceActivity() {
                         startActivity(intent)
                         Log.d(TAG, "matching directory type: $type")
                         return@itemSelect
-                    } catch(e: ActivityNotFoundException) {
+                    } catch (e: ActivityNotFoundException) {
                     }
                 }
 

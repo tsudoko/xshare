@@ -13,7 +13,7 @@ import java.util.*
 fun <T> List<T>.getRandom(): T = get(Random().nextInt(size))
 
 fun getFatalDialogBuilder(context: Activity): AlertDialog.Builder =
-    AlertDialog.Builder(context).setOnDismissListener { context.finishAffinity() }
+        AlertDialog.Builder(context).setOnDismissListener { context.finishAffinity() }
 
 fun Uri.getFilename(context: Context): String {
     context.contentResolver.query(this, null, null, null, null).use { cursor ->
@@ -41,7 +41,7 @@ fun View.fadeOut(duration: Long = resources.getInteger(android.R.integer.config_
         fade(false, duration)
 
 fun Notification.Builder.setContentInfoN(text: CharSequence?): Notification.Builder =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-        setSubText(text)
-    else
-        setContentInfo(text)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            setSubText(text)
+        else
+            setContentInfo(text)

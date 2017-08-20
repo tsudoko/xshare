@@ -39,7 +39,7 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
 
     try {
         uploader.validate()
-    } catch(e: Exception) {
+    } catch (e: Exception) {
         notifManager.cancel(notifID)
         nBuilder.setOngoing(false)
                 .setProgress(0, 0, false)
@@ -102,7 +102,7 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
 
                         if (prefs.getBoolean("autoclip", false))
                             clipManager.primaryClip = ClipData.newPlainText("URL", url)
-                    } catch(e: Exception) {
+                    } catch (e: Exception) {
                         val msg = context.resources.getString(R.string.response_text_and_error, d, e.toString())
                         nBuilder.setContentText(context.resources.getString(R.string.response_handling_error))
                                 .setStyle(Notification.BigTextStyle().bigText(msg))
@@ -120,7 +120,7 @@ private fun blobFromUri(context: Context, uri: Uri): Blob? {
         context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
             return Blob(name, fd.statSize, { context.contentResolver.openInputStream(uri) })
         }
-    } catch(e: Exception) {
+    } catch (e: Exception) {
         Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
         return null
     }
