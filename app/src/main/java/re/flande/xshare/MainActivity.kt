@@ -110,7 +110,7 @@ class MainActivity : PreferenceActivity() {
                         .addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-                (0..clip.itemCount - 1).map { clip.getItemAt(it) }.forEach {
+                (0 until clip.itemCount).map { clip.getItemAt(it) }.forEach {
                     if (it.text != null) {
                         intent.putExtra("contents", it.text.toString().toByteArray()) // FIXME shouldn't need conversion
                         return@forEach

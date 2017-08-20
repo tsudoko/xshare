@@ -10,14 +10,10 @@ import android.provider.OpenableColumns
 import android.view.View
 import java.util.*
 
-fun <T> List<T>.getRandom(): T {
-    return get(Random().nextInt(size))
-}
+fun <T> List<T>.getRandom(): T = get(Random().nextInt(size))
 
-fun getFatalDialogBuilder(context: Activity): AlertDialog.Builder {
-    return AlertDialog.Builder(context)
-            .setOnDismissListener { context.finishAffinity() }
-}
+fun getFatalDialogBuilder(context: Activity): AlertDialog.Builder =
+    AlertDialog.Builder(context).setOnDismissListener { context.finishAffinity() }
 
 fun Uri.getFilename(context: Context): String {
     context.contentResolver.query(this, null, null, null, null).use { cursor ->
@@ -38,17 +34,14 @@ fun View.fade(show: Boolean, duration: Long) {
             .withEndAction { visibility = if (show) View.VISIBLE else View.GONE }
 }
 
-fun View.fadeIn(duration: Long = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()) {
-    fade(true, duration)
-}
+fun View.fadeIn(duration: Long = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()) =
+        fade(true, duration)
 
-fun View.fadeOut(duration: Long = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()) {
-    fade(false, duration)
-}
+fun View.fadeOut(duration: Long = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()) =
+        fade(false, duration)
 
-fun Notification.Builder.setContentInfoN(text: CharSequence?): Notification.Builder {
+fun Notification.Builder.setContentInfoN(text: CharSequence?): Notification.Builder =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-        return setSubText(text)
+        setSubText(text)
     else
-        return setContentInfo(text)
-}
+        setContentInfo(text)

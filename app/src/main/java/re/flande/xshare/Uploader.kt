@@ -58,11 +58,11 @@ class Uploader(var Name: String?,
                 }
 
                 if (queryType.isNotEmpty()) {
-                    when (String(queryType)) {
-                        "json" -> doQuery = { JsonPath.read(response, it) }
-                        "xml" -> doQuery = { XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
-                        "regex" -> doQuery = { matchRegex(response, it) }
-                        "random" -> doQuery = { it.split('|').getRandom() }
+                    doQuery = when (String(queryType)) {
+                        "json" -> { it -> JsonPath.read(response, it) }
+                        "xml" -> { it -> XPathFactory.newInstance().newXPath().evaluate(it, InputSource(response.byteInputStream())) }
+                        "regex" -> { it -> matchRegex(response, it) }
+                        "random" -> { it -> it.split('|').getRandom() }
                         else -> throw IllegalStateException("query type ${String(queryType)} not implemented")
                     }
                 }
@@ -123,14 +123,14 @@ class Uploader(var Name: String?,
         val matcher = Pattern.compile(RegexList?.get(i) ?: throw EmptyFieldException("RegexList")).matcher(text)
         matcher.find()
 
-        if (groupName.isEmpty()) {
-            return matcher.group()
+        return if (groupName.isEmpty()) {
+            matcher.group()
         } else {
             val g = groupName.toString()
             try {
-                return matcher.group(Integer.parseInt(g))
+                matcher.group(Integer.parseInt(g))
             } catch (_: NumberFormatException) {
-                return matcher.group(g)
+                matcher.group(g)
             }
         }
     }
