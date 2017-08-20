@@ -1,6 +1,7 @@
 package re.flande.xshare
 
 import android.util.Log
+import com.github.kittinunf.fuel.core.Method
 import com.google.code.regexp.Pattern
 import com.google.gson.Gson
 import com.jayway.jsonpath.JsonPath
@@ -25,6 +26,8 @@ class Uploader(var Name: String?,
     fun validate() {
         if(RequestType.isNullOrEmpty())
             RequestType = "POST"
+        Method.valueOf(RequestType!!)
+
         if(RequestURL.isNullOrEmpty())
             throw EmptyFieldException("RequestURL")
         if(FileFormName.isNullOrEmpty())
