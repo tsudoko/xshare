@@ -28,10 +28,6 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
 
     val blob = blobFromUri(context, file) ?: return
 
-    var rurl = uploader.RequestURL ?: throw Exception("no uploader url specified")
-    if (!rurl.startsWith("http"))
-        rurl = "http://" + rurl
-
     val nBuilder = Notification.Builder(context)
             .setContentTitle(blob.name)
             .setProgress(100, 0, true)
@@ -41,7 +37,22 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
 
     var time = SystemClock.uptimeMillis()
 
-    Fuel.upload(rurl, Method.valueOf(uploader.RequestType ?: "POST"), uploader.Arguments?.toList())
+    try {
+        uploader.validate()
+    } catch(e: Exception) {
+        notifManager.cancel(notifID)
+        nBuilder.setOngoing(false)
+                .setProgress(0, 0, false)
+                .setContentText(context.resources.getString(R.string.upload_failed))
+                .setStyle(Notification.BigTextStyle().bigText(e.toString()))
+        notifManager.notify(notifID, nBuilder.build())
+    }
+
+    var rurl = uploader.RequestURL
+    if (!rurl.startsWith("http"))
+        rurl = "http://" + rurl
+
+    Fuel.upload(rurl, Method.valueOf(uploader.RequestType), uploader.Arguments.toList())
             .timeout(30_000)
             .timeoutRead(30_000)
             .header(uploader.Headers)
