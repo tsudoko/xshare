@@ -43,7 +43,7 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
         notifManager.cancel(notifID)
         nBuilder.setOngoing(false)
                 .setProgress(0, 0, false)
-                .setContentText(context.resources.getString(R.string.upload_failed))
+                .setContentText(context.resources.getString(R.string.invalid_uploader_settings))
                 .setStyle(Notification.BigTextStyle().bigText(e.toString()))
         notifManager.notify(notifID, nBuilder.build())
         return

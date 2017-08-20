@@ -6,6 +6,7 @@
 	<!-- Notifications -->
 	<string name="upload_complete">Upload complete.</string>
 	<string name="upload_failed">Upload failed.</string>
+	<string name="invalid_uploader_settings">Invalid uploader settings.</string>
 	<string name="response_handling_error">Response handling error.</string>
 
 	<string name="response_text_and_error">Response text:\n%1$s \nError:\n%2$s</string>
