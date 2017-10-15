@@ -8,13 +8,13 @@ android {
 		applicationId "re.flande.xshare"
 		minSdkVersion 19
 		targetSdkVersion 25
-		versionCode 3
+		versionCode 4
 		versionName git_app_version
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
 	buildTypes {
 		release {
-			minifyEnabled true
+			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
 	}
