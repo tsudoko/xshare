@@ -53,38 +53,34 @@ class ImportActivity : Activity() {
         }
     }
 
-    private fun import(up: Uploader) {
-        try {
-            val name = (up.Name + ".sxcu").replace("/", "⁄")
-            val f = File(getExternalFilesDir(null), name)
+    private fun import(up: Uploader) = try {
+        val name = (up.Name + ".sxcu").replace("/", "⁄")
+        val f = File(getExternalFilesDir(null), name)
 
-            if (f.exists()) {
-                val d = getFatalDialogBuilder(this)
-                        .setMessage(resources.getString(R.string.thing_already_exists, up.Name))
-                        .setPositiveButton(R.string.overwrite, { _, _ -> uploaderToFile(up, f) })
-                        .setNeutralButton(R.string.rename, null)
-                        .setNegativeButton(android.R.string.cancel, { _, _ -> })
-                        .create()
+        if (f.exists()) {
+            val d = getFatalDialogBuilder(this)
+                    .setMessage(resources.getString(R.string.thing_already_exists, up.Name))
+                    .setPositiveButton(R.string.overwrite, { _, _ -> uploaderToFile(up, f) })
+                    .setNeutralButton(R.string.rename, null)
+                    .setNegativeButton(android.R.string.cancel, { _, _ -> })
+                    .create()
 
-                d.setOnShowListener {
-                    d.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener { rename(up); d.hide() }
-                }
-                d.show()
-            } else {
-                uploaderToFile(up, f)
+            d.setOnShowListener {
+                d.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener { rename(up); d.hide() }
             }
-        } catch (e: Exception) {
-            fail(e)
+            d.show()
+        } else {
+            uploaderToFile(up, f)
         }
+    } catch (e: Exception) {
+        fail(e)
     }
 
-    private fun importStream(inStream: InputStream) {
-        try {
-            val up = Uploader.fromInputStream(inStream)
-            import(up)
-        } catch (e: Exception) {
-            fail(e)
-        }
+    private fun importStream(inStream: InputStream) = try {
+        val up = Uploader.fromInputStream(inStream)
+        import(up)
+    } catch (e: Exception) {
+        fail(e)
     }
 
     private fun fail(e: Exception) {

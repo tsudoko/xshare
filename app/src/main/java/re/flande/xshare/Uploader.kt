@@ -139,14 +139,10 @@ class Uploader(var Name: String?,
     }
 
     companion object {
-        fun fromInputStream(stream: InputStream): Uploader {
-            stream.use {
-                it.reader().use {
-                    val uploader = Gson().fromJson(it, Uploader::class.java)
-                    uploader.validate()
-                    return uploader
-                }
-            }
+        fun fromInputStream(stream: InputStream): Uploader = stream.reader().use {
+            val uploader = Gson().fromJson(it, Uploader::class.java)
+            uploader.validate()
+            return uploader
         }
     }
 }
