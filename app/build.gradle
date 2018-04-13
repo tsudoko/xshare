@@ -26,8 +26,8 @@ dependencies {
 	compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
 	compile 'com.google.code.gson:gson:2.8.1'
-	compile 'com.github.kittinunf.fuel:fuel:1.10.0'
-	compile 'com.github.kittinunf.fuel:fuel-android:1.10.0'
+	compile 'com.github.kittinunf.fuel:fuel:1.12.1'
+	compile 'com.github.kittinunf.fuel:fuel-android:1.12.1'
 	compile 'com.jayway.jsonpath:json-path:2.4.0'
 	compile 'com.github.tony19:named-regexp:0.2.5'
 
