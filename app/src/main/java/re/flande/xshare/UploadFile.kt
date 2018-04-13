@@ -115,6 +115,7 @@ fun uploadFile(context: Context, uploader: Uploader, file: Uri) {
 
 private fun blobFromUri(context: Context, uri: Uri): Blob? {
     context.grantUriPermission(context.packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
     try {
         val name = uri.getFilename(context)
         context.contentResolver.openFileDescriptor(uri, "r").use { fd ->
